@@ -1,0 +1,10 @@
+/target/
+/.idea/
+/.vscode/
+.serena/
+*.iml
+*.form
+*.log
+/.DS_Store
+data/*.mv.db
+data/*.trace.db
