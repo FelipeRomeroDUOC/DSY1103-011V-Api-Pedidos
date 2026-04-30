@@ -2,6 +2,8 @@
 
 Este documento describe el JFrame `RegistroUsuarios` como una pantalla de escritorio orientada a simplificar el registro manual de nuevos usuarios o clientes mediante solicitudes `POST`.
 
+**Nota de actualización:** El proyecto ha sido actualizado al **JDK 25**, requiriendo versiones compatibles de Maven y Lombok.
+
 ## Propósito
 
 `RegistroUsuarios` existe para capturar la información de un nuevo usuario desde una interfaz campo a campo, sin obligar a la persona usuaria a conocer el contrato HTTP del backend.

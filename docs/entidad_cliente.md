@@ -2,6 +2,8 @@
 
 Este módulo implementa la capa de cliente del proyecto bajo el nuevo paquete raíz `cl.apipedidos`. La documentación refleja la estructura real del código, incluyendo persistencia, negocio, API REST, DTOs y el formulario Swing que quedó generado en el árbol del proyecto.
 
+**Nota de actualización:** El proyecto ha sido actualizado al **JDK 25**, requiriendo versiones compatibles de Maven y Lombok.
+
 ## 📦 Archivos creados
 
 | Archivo | Propósito |

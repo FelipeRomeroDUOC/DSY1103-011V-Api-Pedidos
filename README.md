@@ -4,12 +4,12 @@ Este proyecto es una API REST desarrollada en Java con Spring Boot. El foco actu
 
 ## 🚀 Tecnologías utilizadas
 
-- Java 21.
+- Java 25.
 - Spring Boot.
 - Spring Web.
 - Spring Data JPA.
 - Hibernate.
-- Lombok.
+- Lombok (actualizado para compatibilidad con JDK 25).
 - Bean Validation.
 - H2 Database para desarrollo local.
 - MySQL y PostgreSQL como opciones de persistencia alternativa.
@@ -34,8 +34,8 @@ Este proyecto es una API REST desarrollada en Java con Spring Boot. El foco actu
 
 ## 🛠️ Requisitos previos
 
-- Java JDK 21.
-- Maven Wrapper o Maven instalado.
+- Java JDK 25.
+- Maven (versión actualizada para compatibilidad con JDK 25).
 - Un IDE como VS Code o IntelliJ IDEA.
 
 ## ▶️ Cómo ejecutar el proyecto
@@ -64,10 +64,10 @@ El archivo `src/main/resources/application.properties` solo define el nombre de 
 
 ### H2 local
 
-La configuración de H2 usa una base en archivo para conservar los datos entre reinicios y habilita la consola web:
+La configuración de H2 usa una base en memoria para evitar bloqueos de archivo durante el desarrollo y habilita la consola web:
 
 ```properties
-spring.datasource.url=jdbc:h2:file:./data/api_pedidos;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+spring.datasource.url=jdbc:h2:mem:api_pedidos;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
 spring.datasource.driver-class-name=org.h2.Driver
 spring.datasource.username=sa
 spring.datasource.password=
@@ -101,7 +101,7 @@ Por defecto, la aplicación arranca con el perfil `h2` si no se define otro perf
 - Al iniciar la app con una base vacía, se cargan automáticamente las regiones y comunas reales de Chile.
 - Al iniciar la app con una tabla vacía, se cargan clientes de ejemplo automáticamente.
 - Al iniciar la app, se eliminan filas de clientes incompletas y se reordenan los IDs para que queden consecutivos desde 1.
-- Los datos ingresados desde la interfaz se conservan en el archivo local de H2 entre reinicios.
+- Los datos ingresados desde la interfaz se conservan mientras la aplicación está en ejecución.
 
 ## 🧩 Carga de datos de ejemplo
 

@@ -2,6 +2,8 @@
 
 Este documento define el esqueleto teórico para un consumidor HTTP externo del `cliente-service`. La idea es dejar preparada una pieza reutilizable para que, más adelante, `RegistroUsuarios` o un frontend web consuman la API REST sin depender de repositorios, entidades o servicios internos del backend.
 
+**Nota de actualización:** El proyecto ha sido actualizado al **JDK 25**, requiriendo versiones compatibles de Maven y Lombok.
+
 ## Objetivo
 
 - Consumir la API REST del módulo de clientes por HTTP.
