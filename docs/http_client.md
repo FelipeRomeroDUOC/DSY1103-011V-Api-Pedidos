@@ -7,7 +7,7 @@ Este documento define el esqueleto teórico para un consumidor HTTP externo del 
 ## Objetivo
 
 - Consumir la API REST del módulo de clientes por HTTP.
-- Poblar los combos de región y comuna desde la base de datos a través de endpoints.
+- Poblar los combos de región, provincia y comuna desde la base de datos a través de endpoints.
 - Enviar solicitudes `POST`, `PUT`, `GET` y `DELETE` contra el `cliente-service`.
 - Traducir respuestas y errores HTTP a mensajes utilizables por la interfaz.
 - Mantener desacoplada la UI del backend para facilitar el reemplazo futuro por un frontend web.
@@ -38,7 +38,7 @@ Este es el orden recomendado para construir e integrar el esqueleto:
 - Sirve como punto de arranque del backend y, si se desea, de la UI externa.
 
 2. `UbicacionApiClient`
-- Consume endpoints de regiones y comunas.
+- Consume endpoints de regiones, provincias y comunas.
 - Devuelve listas para poblar combos.
 - Debe ser la primera dependencia de la UI si se cargan catálogos dinámicos.
 
@@ -122,6 +122,9 @@ Si el proyecto crece, conviene separar además:
 - `GET /api/regiones/{id}/comunas`
   - Lista comunas de una región.
 
+- `GET /api/regiones/{id}/provincias`
+  - Lista provincias de una región.
+
 ## Responsabilidades por clase
 
 ### `ClienteApiClient`
@@ -143,11 +146,13 @@ Métodos esperados:
 
 Responsabilidades:
 - Obtener regiones.
+- Obtener provincias por región.
 - Obtener comunas filtradas por región.
 - Soportar el llenado dinámico de combos.
 
 Métodos esperados:
 - `listarRegiones()`
+- `listarProvinciasPorRegion(...)`
 - `listarComunasPorRegion(...)`
 - `obtenerComunaPorNombre(...)`
 
@@ -200,7 +205,7 @@ La API REST ya devuelve respuestas estructuradas para errores de negocio y valid
 
 ### Fase 2: Cliente de ubicación
 - Implementar `UbicacionApiClient`.
-- Consumir regiones y comunas desde la API.
+- Consumir regiones, provincias y comunas desde la API.
 - Conectar la carga de combos a ese cliente.
 
 ### Fase 3: Cliente de clientes
@@ -218,7 +223,7 @@ La API REST ya devuelve respuestas estructuradas para errores de negocio y valid
 ### Fase 5: Validación
 - Probar contra el `cliente-service` corriendo localmente.
 - Verificar casos felices y errores `400`, `404`, `409` y `503`.
-- Revisar que regiones y comunas se carguen desde la base.
+- Revisar que regiones, provincias y comunas se carguen desde la base.
 
 ## Consideraciones de diseño
 
@@ -235,7 +240,7 @@ Feature: Cliente HTTP externo
 
   Background:
     Given el cliente-service está disponible en "http://localhost:8080"
-    And existen regiones y comunas reales cargadas en la base de datos
+    And existen regiones, provincias y comunas reales cargadas en la base de datos
     And la UI consumidora está iniciada como cliente externo
 
   Scenario: Cargar regiones para el combo
@@ -256,6 +261,7 @@ Feature: Cliente HTTP externo
     When la UI envía POST /api/clientes
     Then la respuesta tiene código 201
     And el cliente queda registrado en el backend
+    And la respuesta incluye comuna, provincia y región
     And la UI muestra un mensaje de éxito
 
   Scenario: Crear cliente con RUT duplicado

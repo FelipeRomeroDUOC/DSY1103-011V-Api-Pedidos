@@ -1,6 +1,6 @@
 # Api Pedidos
 
-Este proyecto es una API REST desarrollada en Java con Spring Boot. El foco actual del repositorio es la gestión de clientes, junto con el modelo real de ubicación de Chile compuesto por regiones y comunas, todo bajo el paquete raíz `cl.apipedidos`.
+Este proyecto es una API REST desarrollada en Java con Spring Boot. El foco actual del repositorio es la gestión de clientes, junto con el modelo real de ubicación de Chile compuesto por regiones, provincias y comunas, todo bajo el paquete raíz `cl.apipedidos`.
 
 ## 🚀 Tecnologías utilizadas
 
@@ -19,14 +19,17 @@ Este proyecto es una API REST desarrollada en Java con Spring Boot. El foco actu
 - `cl.apipedidos.ApiPedidosApplication`: clase principal de arranque.
 - `cl.apipedidos.cliente.entity.Cliente`: entidad JPA del cliente.
 - `cl.apipedidos.ubicacion.entity.Region`: entidad JPA de regiones de Chile.
+- `cl.apipedidos.ubicacion.entity.Provincia`: entidad JPA de provincias de Chile.
 - `cl.apipedidos.ubicacion.entity.Comuna`: entidad JPA de comunas de Chile.
 - `cl.apipedidos.cliente.repository.ClienteRepository`: acceso a datos.
 - `cl.apipedidos.ubicacion.repository.RegionRepository`: acceso a datos de regiones.
+- `cl.apipedidos.ubicacion.repository.ProvinciaRepository`: acceso a datos de provincias.
 - `cl.apipedidos.ubicacion.repository.ComunaRepository`: acceso a datos de comunas.
 - `cl.apipedidos.cliente.service.ClienteService`: lógica de negocio.
 - `cl.apipedidos.cliente.controller.ClienteController`: endpoints REST.
 - `cl.apipedidos.cliente.dto.*`: DTOs de entrada y salida.
-- `cl.apipedidos.ubicacion.config.UbicacionDataLoader`: carga las regiones y comunas reales de Chile al iniciar la aplicación.
+- `cl.apipedidos.ubicacion.config.UbicacionDataLoader`: carga las regiones, provincias y comunas reales de Chile al iniciar la aplicación.
+- `cl.apipedidos.ubicacion.config.UbicacionSchemaMigrator`: migra datos existentes para completar `id_provincia` en comunas antiguas cuando corresponde.
 - `cl.apipedidos.cliente.config.ClienteDataLoader`: carga datos de ejemplo al iniciar si la tabla está vacía.
 - `cl.apipedidos.cliente.config.ClienteSchemaMigrator`: corrige el esquema al iniciar, elimina filas incompletas y renumera los clientes de forma secuencial.
 - `cl.apipedidos.cliente.gui.RegistroUsuariosStartupListener`: abre el JFrame `RegistroUsuarios` cuando Spring Boot termina de iniciar.
@@ -64,14 +67,16 @@ El archivo `src/main/resources/application.properties` solo define el nombre de 
 
 ### H2 local
 
-La configuración de H2 usa una base en memoria para evitar bloqueos de archivo durante el desarrollo y habilita la consola web:
+La configuración de H2 usa una base en archivo local y habilita la consola web. Además, ejecuta una migración SQL idempotente para el modelo con provincias:
 
 ```properties
-spring.datasource.url=jdbc:h2:mem:api_pedidos;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+spring.datasource.url=jdbc:h2:file:./data/api_pedidos;AUTO_SERVER=TRUE;DB_CLOSE_DELAY=-1
 spring.datasource.driver-class-name=org.h2.Driver
 spring.datasource.username=sa
 spring.datasource.password=
 spring.jpa.hibernate.ddl-auto=update
+spring.sql.init.mode=always
+spring.sql.init.schema-locations=classpath:ubicacion-migration-h2.sql
 spring.h2.console.enabled=true
 spring.h2.console.path=/h2-console
 ```
@@ -87,6 +92,9 @@ Por defecto, la aplicación arranca con el perfil `h2` si no se define otro perf
 | `GET` | `/api/clientes/{identificador}` | Buscar por ID numérico o por nombre. |
 | `PUT` | `/api/clientes/{id}` | Actualizar un cliente existente. |
 | `DELETE` | `/api/clientes/{id}` | Eliminar un cliente. |
+| `GET` | `/api/regiones` | Listar regiones. |
+| `GET` | `/api/regiones/{idRegion}/provincias` | Listar provincias por región. |
+| `GET` | `/api/regiones/{idRegion}/comunas` | Listar comunas por región. |
 
 ## 🧪 Comportamiento funcional
 
@@ -94,22 +102,22 @@ Por defecto, la aplicación arranca con el perfil `h2` si no se define otro perf
 - El POST y el PUT exigen nombre, RUT, DV, dirección, email, teléfono y comuna.
 - No se permiten nombres duplicados.
 - No se permiten RUT duplicados.
-- La comuna se valida contra la base real de comunas de Chile.
+- La comuna se valida contra la base real de comunas de Chile y permite coincidencia por nombre ignorando mayúsculas/minúsculas y acentos.
 - El ID del cliente se asigna de forma secuencial tomando el mayor ID existente y sumando uno.
 - Si una búsqueda falla, la API responde con `404 Cliente no encontrado`.
 - Si existe conflicto por unicidad, la API responde con `409`.
-- Al iniciar la app con una base vacía, se cargan automáticamente las regiones y comunas reales de Chile.
+- Al iniciar la app con una base vacía, se cargan automáticamente las regiones, provincias y comunas reales de Chile.
 - Al iniciar la app con una tabla vacía, se cargan clientes de ejemplo automáticamente.
 - Al iniciar la app, se eliminan filas de clientes incompletas y se reordenan los IDs para que queden consecutivos desde 1.
 - Los datos ingresados desde la interfaz se conservan mientras la aplicación está en ejecución.
 
 ## 🧩 Carga de datos de ejemplo
 
-La clase `cl.apipedidos.ubicacion.config.UbicacionDataLoader` inserta las 16 regiones y las comunas reales de Chile desde el recurso local `data/chile-divisiones-territoriales.json` si las tablas están vacías. La clase `cl.apipedidos.cliente.config.ClienteDataLoader` inserta registros de prueba solo si no hay clientes almacenados.
+La clase `cl.apipedidos.ubicacion.config.UbicacionDataLoader` inserta las 16 regiones, las provincias y las comunas reales de Chile desde el recurso local `data/chile-divisiones-territoriales.json` si las tablas están vacías. La clase `cl.apipedidos.cliente.config.ClienteDataLoader` inserta registros de prueba solo si no hay clientes almacenados.
 
 ## 🖥️ Interfaz visual
 
-El archivo `cl.apipedidos.cliente.gui.RegistroUsuarios` es un formulario Swing con campos para registrar usuarios campo a campo mediante solicitudes `POST`. Carga regiones y comunas desde la API, se abre automáticamente al terminar el arranque de Spring Boot y ya no depende de datos fijos para la ubicación.
+El archivo `cl.apipedidos.cliente.gui.RegistroUsuarios` es un formulario Swing con campos para registrar usuarios campo a campo mediante solicitudes `POST`. Carga regiones y comunas desde la API (y puede consultar provincias por región), se abre automáticamente al terminar el arranque de Spring Boot y ya no depende de datos fijos para la ubicación.
 
 ## 🧭 Ejemplo de uso en Postman
 
@@ -141,7 +149,7 @@ El archivo `cl.apipedidos.cliente.gui.RegistroUsuarios` es un formulario Swing c
 }
 ```
 
-La respuesta de la API incluye la comuna y la región asociadas al cliente.
+La respuesta de la API incluye la comuna, la provincia y la región asociadas al cliente.
 
 ## 📚 Documentación
 

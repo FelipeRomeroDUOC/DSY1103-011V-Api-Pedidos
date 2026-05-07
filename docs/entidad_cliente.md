@@ -11,10 +11,12 @@ Este módulo implementa la capa de cliente del proyecto bajo el nuevo paquete ra
 | `src/main/java/cl/apipedidos/ApiPedidosApplication.java` | Punto de entrada de Spring Boot. Arranca la aplicación y habilita el escaneo de componentes bajo `cl.apipedidos`. |
 | `src/main/java/cl/apipedidos/cliente/entity/Cliente.java` | Entidad JPA que representa a un cliente en la base de datos. |
 | `src/main/java/cl/apipedidos/ubicacion/entity/Region.java` | Entidad JPA que representa una región de Chile. |
-| `src/main/java/cl/apipedidos/ubicacion/entity/Comuna.java` | Entidad JPA que representa una comuna de Chile y su región asociada. |
+| `src/main/java/cl/apipedidos/ubicacion/entity/Provincia.java` | Entidad JPA que representa una provincia de Chile y su región asociada. |
+| `src/main/java/cl/apipedidos/ubicacion/entity/Comuna.java` | Entidad JPA que representa una comuna de Chile y su provincia asociada. |
 | `src/main/java/cl/apipedidos/ubicacion/repository/RegionRepository.java` | Repositorio Spring Data JPA para regiones. |
+| `src/main/java/cl/apipedidos/ubicacion/repository/ProvinciaRepository.java` | Repositorio Spring Data JPA para provincias. |
 | `src/main/java/cl/apipedidos/ubicacion/repository/ComunaRepository.java` | Repositorio Spring Data JPA para comunas. |
-| `src/main/java/cl/apipedidos/ubicacion/config/UbicacionDataLoader.java` | Inicializador que carga regiones y comunas reales de Chile desde un recurso local. |
+| `src/main/java/cl/apipedidos/ubicacion/config/UbicacionDataLoader.java` | Inicializador que carga regiones, provincias y comunas reales de Chile desde un recurso local. |
 | `src/main/java/cl/apipedidos/cliente/repository/ClienteRepository.java` | Repositorio Spring Data JPA con consultas derivadas para clientes. |
 | `src/main/java/cl/apipedidos/cliente/service/ClienteService.java` | Capa de negocio con validaciones, normalización y operaciones CRUD. |
 | `src/main/java/cl/apipedidos/cliente/controller/ClienteController.java` | Capa REST que expone los endpoints de clientes. |
@@ -35,13 +37,29 @@ Archivo: `src/main/java/cl/apipedidos/ubicacion/entity/Region.java`
 #### Atributos
 - `idRegion: String` - Identificador oficial de la región de Chile.
 - `nombreRegion: String` - Nombre de la región.
-- `comunas: List<Comuna>` - Comunas asociadas a la región.
+- `provincias: List<Provincia>` - Provincias asociadas a la región.
 
 #### Métodos
 - `normalize()` - Recorta espacios de los campos antes de persistir o actualizar.
 
 #### Qué hace
-Representa la tabla `regiones` y sirve como padre de la relación `One-to-Many` con comunas.
+Representa la tabla `regiones` y sirve como padre de la relación `One-to-Many` con provincias.
+
+### Entidad: `Provincia`
+
+Archivo: `src/main/java/cl/apipedidos/ubicacion/entity/Provincia.java`
+
+#### Atributos
+- `idProvincia: String` - Identificador oficial de la provincia de Chile.
+- `nombreProvincia: String` - Nombre de la provincia.
+- `region: Region` - Región a la que pertenece la provincia.
+- `comunas: List<Comuna>` - Comunas asociadas a la provincia.
+
+#### Métodos
+- `normalize()` - Recorta espacios de los campos antes de persistir o actualizar.
+
+#### Qué hace
+Representa la tabla `provincias` y materializa la relación con `Region` y `Comuna`.
 
 ### Entidad: `Comuna`
 
@@ -50,14 +68,14 @@ Archivo: `src/main/java/cl/apipedidos/ubicacion/entity/Comuna.java`
 #### Atributos
 - `idComuna: String` - Identificador oficial de la comuna de Chile.
 - `nombreComuna: String` - Nombre de la comuna.
-- `region: Region` - Región a la que pertenece la comuna.
+- `provincia: Provincia` - Provincia a la que pertenece la comuna.
 - `clientes: List<Cliente>` - Clientes asociados a la comuna.
 
 #### Métodos
 - `normalize()` - Recorta espacios de los campos antes de persistir o actualizar.
 
 #### Qué hace
-Representa la tabla `comunas` y materializa la relación `One-to-Many` con `Region` y con `Cliente`.
+Representa la tabla `comunas` y materializa la relación `Many-to-One` con `Provincia` y `One-to-Many` con `Cliente`.
 
 ### Entidad: `Cliente`
 
@@ -100,11 +118,24 @@ Archivo: `src/main/java/cl/apipedidos/ubicacion/repository/ComunaRepository.java
 
 #### Métodos
 - `findByNombreComunaIgnoreCase(String nombreComuna)` - Busca una comuna por nombre.
-- `findByRegion_NombreRegionIgnoreCase(String nombreRegion)` - Lista comunas por nombre de región.
+- `findByProvincia_Region_IdRegionOrderByNombreComunaAsc(String idRegion)` - Lista comunas por ID de región.
+- `findByProvincia_Region_NombreRegionIgnoreCase(String nombreRegion)` - Lista comunas por nombre de región.
 - `existsByNombreComunaIgnoreCase(String nombreComuna)` - Verifica si ya existe una comuna con ese nombre.
 
 #### Qué hace
-Expone consultas derivadas para trabajar con la relación entre región y comuna.
+Expone consultas derivadas para trabajar con la relación entre región, provincia y comuna.
+
+### Repository: `ProvinciaRepository`
+
+Archivo: `src/main/java/cl/apipedidos/ubicacion/repository/ProvinciaRepository.java`
+
+#### Métodos
+- `findAllByRegion_IdRegionOrderByNombreProvinciaAsc(String idRegion)` - Lista provincias por región ordenadas por nombre.
+- `findByNombreProvinciaIgnoreCase(String nombreProvincia)` - Busca provincia por nombre.
+- `existsByNombreProvinciaIgnoreCase(String nombreProvincia)` - Verifica existencia de provincia por nombre.
+
+#### Qué hace
+Expone consultas derivadas para la relación entre regiones y provincias.
 
 ### Repository: `ClienteRepository`
 
@@ -246,11 +277,12 @@ Archivo: `src/main/java/cl/apipedidos/cliente/dto/ClienteResponseDTO.java`
 - `emailCl: String`
 - `telefonoCl: String`
 - `comuna: String`
+- `provincia: String`
 - `region: String`
 - `fechaRegistro: LocalDate`
 
 #### Qué hace
-Encapsula la respuesta pública de la API, incluyendo el identificador, la comuna y la región asociadas, y la fecha de registro.
+Encapsula la respuesta pública de la API, incluyendo el identificador, la comuna, la provincia y la región asociadas, y la fecha de registro.
 
 ## 🧰 Carga de datos iniciales
 
@@ -290,7 +322,7 @@ Archivo: `src/main/java/cl/apipedidos/ubicacion/config/UbicacionDataLoader.java`
 #### Método principal
 - `run(String... args)`
 	- Parámetro: `args` con los argumentos de arranque.
-	- Qué hace: si la base está vacía, carga las 16 regiones y las comunas reales de Chile desde el recurso local `data/chile-divisiones-territoriales.json`.
+	- Qué hace: si la base está vacía, carga las 16 regiones, sus provincias y las comunas reales de Chile desde el recurso local `data/chile-divisiones-territoriales.json`.
 
 #### Qué hace
 Inicializa las tablas de ubicación con datos reales, fijos e inmutables.

@@ -8,7 +8,7 @@ Este documento describe el JFrame `RegistroUsuarios` como una pantalla de escrit
 
 `RegistroUsuarios` existe para capturar la información de un nuevo usuario desde una interfaz campo a campo, sin obligar a la persona usuaria a conocer el contrato HTTP del backend.
 
-La pantalla actúa como un formulario de alta guiado y busca reducir errores de carga, especialmente en los campos de ubicación, al trabajar con catálogos dinámicos de región y comuna.
+La pantalla actúa como un formulario de alta guiado y busca reducir errores de carga, especialmente en los campos de ubicación, al trabajar con catálogos dinámicos de región, provincia y comuna.
 
 ## Relación con Spring Boot
 
@@ -73,6 +73,14 @@ El combo de comunas se llenará de forma dependiente de la región seleccionada:
 - la respuesta se usa para poblar `comunaClComboBox`;
 - el valor seleccionado se envía en el payload final como la comuna elegida.
 
+### Provincia
+
+La API también expone el endpoint:
+
+- `GET /api/regiones/{idRegion}/provincias`
+
+Este endpoint puede utilizarse para mostrar provincia en la UI o para validaciones adicionales de consistencia geográfica.
+
 ### Regla de carga
 
 - Las regiones se cargan al abrir la ventana.
@@ -129,7 +137,7 @@ Para que la experiencia sea clara e intuitiva, la pantalla debe combinar validac
 
 ## Estado actual
 
-Actualmente `RegistroUsuarios` ya está enlazado al cliente HTTP para cargar regiones y comunas, y para enviar el `POST` de registro con `nombre`, `rut`, `dv`, `direccion`, `email`, `telefono` y `comuna`.
+Actualmente `RegistroUsuarios` ya está enlazado al cliente HTTP para cargar regiones y comunas (con endpoint disponible para provincias), y para enviar el `POST` de registro con `nombre`, `rut`, `dv`, `direccion`, `email`, `telefono` y `comuna`.
 
 La ventana se crea y se muestra con éxito al iniciar la aplicación Spring Boot, sin errores de `headless` ni fallos de deserialización.
 
@@ -142,7 +150,7 @@ El siguiente trabajo será hacer correcciones menores al diseño de la interfaz 
 ## Dependencias conceptuales
 
 - `docs/http_client.md`: describe el cliente HTTP que consumirá la API.
-- `src/main/java/cl/apipedidos/ubicacion/controller/UbicacionController.java`: expone los endpoints de regiones y comunas.
+- `src/main/java/cl/apipedidos/ubicacion/controller/UbicacionController.java`: expone los endpoints de regiones, provincias y comunas.
 - `src/main/java/cl/apipedidos/cliente/controller/ClienteController.java`: expone el endpoint de alta.
 
 ## Especificación Gherkin
@@ -152,7 +160,7 @@ Feature: Registro de usuarios desde el JFrame RegistroUsuarios
 
   Background:
     Given la aplicación Spring Boot está disponible
-    And existen regiones y comunas cargadas en la base de datos
+    And existen regiones, provincias y comunas cargadas en la base de datos
 
   Scenario: Cargar regiones al abrir la ventana
     When se abre la pantalla RegistroUsuarios
