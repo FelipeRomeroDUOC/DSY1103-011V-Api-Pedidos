@@ -1,8 +1,10 @@
 package cl.apipedidos.ubicacion.service;
 
 import cl.apipedidos.ubicacion.entity.Comuna;
+import cl.apipedidos.ubicacion.entity.Provincia;
 import cl.apipedidos.ubicacion.entity.Region;
 import cl.apipedidos.ubicacion.repository.ComunaRepository;
+import cl.apipedidos.ubicacion.repository.ProvinciaRepository;
 import cl.apipedidos.ubicacion.repository.RegionRepository;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -15,10 +17,12 @@ import org.springframework.web.server.ResponseStatusException;
 public class UbicacionService {
 
     private final RegionRepository regionRepository;
+    private final ProvinciaRepository provinciaRepository;
     private final ComunaRepository comunaRepository;
 
-    public UbicacionService(RegionRepository regionRepository, ComunaRepository comunaRepository) {
+    public UbicacionService(RegionRepository regionRepository, ProvinciaRepository provinciaRepository, ComunaRepository comunaRepository) {
         this.regionRepository = regionRepository;
+        this.provinciaRepository = provinciaRepository;
         this.comunaRepository = comunaRepository;
     }
 
@@ -26,11 +30,18 @@ public class UbicacionService {
         return regionRepository.findAllByOrderByIdRegionAsc();
     }
 
+    public List<Provincia> listarProvinciasPorRegion(String idRegion) {
+        String regionIdNormalizado = normalizarIdRegion(idRegion);
+        Region region = regionRepository.findById(regionIdNormalizado)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Región no encontrada"));
+        return provinciaRepository.findAllByRegion_IdRegionOrderByNombreProvinciaAsc(region.getIdRegion());
+    }
+
     public List<Comuna> listarComunasPorRegion(String idRegion) {
         String regionIdNormalizado = normalizarIdRegion(idRegion);
         Region region = regionRepository.findById(regionIdNormalizado)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Región no encontrada"));
-        return comunaRepository.findByRegion_IdRegionOrderByNombreComunaAsc(region.getIdRegion());
+        return comunaRepository.findByProvincia_Region_IdRegionOrderByNombreComunaAsc(region.getIdRegion());
     }
 
     private String normalizarIdRegion(String idRegion) {

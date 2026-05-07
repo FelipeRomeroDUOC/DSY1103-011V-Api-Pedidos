@@ -1,8 +1,10 @@
 package cl.apipedidos.ubicacion.config;
 
 import cl.apipedidos.ubicacion.entity.Comuna;
+import cl.apipedidos.ubicacion.entity.Provincia;
 import cl.apipedidos.ubicacion.entity.Region;
 import cl.apipedidos.ubicacion.repository.ComunaRepository;
+import cl.apipedidos.ubicacion.repository.ProvinciaRepository;
 import cl.apipedidos.ubicacion.repository.RegionRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,11 +26,18 @@ public class UbicacionDataLoader implements CommandLineRunner, Ordered {
     private static final String DATA_FILE = "data/chile-divisiones-territoriales.json";
 
     private final RegionRepository regionRepository;
+    private final ProvinciaRepository provinciaRepository;
     private final ComunaRepository comunaRepository;
     private final ObjectMapper objectMapper;
 
-    public UbicacionDataLoader(RegionRepository regionRepository, ComunaRepository comunaRepository, ObjectMapper objectMapper) {
+    public UbicacionDataLoader(
+        RegionRepository regionRepository,
+        ProvinciaRepository provinciaRepository,
+        ComunaRepository comunaRepository,
+        ObjectMapper objectMapper
+    ) {
         this.regionRepository = regionRepository;
+        this.provinciaRepository = provinciaRepository;
         this.comunaRepository = comunaRepository;
         this.objectMapper = objectMapper;
     }
@@ -46,6 +55,7 @@ public class UbicacionDataLoader implements CommandLineRunner, Ordered {
                 JsonNode regionsNode = root.path("regions");
 
                 List<Region> regions = new ArrayList<>();
+                List<Provincia> provincias = new ArrayList<>();
                 List<Comuna> comunas = new ArrayList<>();
 
                 for (JsonNode regionNode : regionsNode) {
@@ -55,25 +65,47 @@ public class UbicacionDataLoader implements CommandLineRunner, Ordered {
                     );
                     regions.add(region);
 
+                    List<Provincia> provinciasDeRegion = new ArrayList<>();
+
                     for (JsonNode comunaNode : regionNode.path("comunas")) {
+                        String idComuna = comunaNode.path("idComuna").asText();
+                        String idProvincia = idComuna.substring(0, 3);
+
+                        Provincia provincia = provinciasDeRegion.stream()
+                            .filter(provinciaExistente -> provinciaExistente.getIdProvincia().equals(idProvincia))
+                            .findFirst()
+                            .orElseGet(() -> {
+                                Provincia nuevaProvincia = new Provincia(
+                                    idProvincia,
+                                    ProvinciaCatalog.nombreProvincia(idProvincia),
+                                    region
+                                );
+                                provinciasDeRegion.add(nuevaProvincia);
+                                provincias.add(nuevaProvincia);
+                                return nuevaProvincia;
+                            });
+
                         comunas.add(new Comuna(
-                            comunaNode.path("idComuna").asText(),
+                            idComuna,
                             comunaNode.path("nombreComuna").asText(),
-                            region
+                            provincia
                         ));
                     }
+
+                    region.getProvincias().addAll(provinciasDeRegion);
                 }
 
                 regionRepository.saveAll(regions);
+                provinciaRepository.saveAll(provincias);
                 comunaRepository.saveAll(comunas);
             }
         } catch (IOException exception) {
-            throw new IllegalStateException("No fue posible cargar las regiones y comunas de Chile", exception);
+            throw new IllegalStateException("No fue posible cargar las regiones, provincias y comunas de Chile", exception);
         }
     }
 
     @Override
     public int getOrder() {
-        return Ordered.HIGHEST_PRECEDENCE;
+        return Ordered.LOWEST_PRECEDENCE;
     }
 }

@@ -9,11 +9,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ComunaRepository extends JpaRepository<Comuna, String> {
 
-    List<Comuna> findByRegion_IdRegionOrderByNombreComunaAsc(String idRegion);
+    List<Comuna> findByProvincia_Region_IdRegionOrderByNombreComunaAsc(String idRegion);
 
     Optional<Comuna> findByNombreComunaIgnoreCase(String nombreComuna);
 
-    List<Comuna> findByRegion_NombreRegionIgnoreCase(String nombreRegion);
+    List<Comuna> findByProvincia_Region_NombreRegionIgnoreCase(String nombreRegion);
 
     boolean existsByNombreComunaIgnoreCase(String nombreComuna);
 }

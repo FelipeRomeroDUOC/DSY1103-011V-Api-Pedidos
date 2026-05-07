@@ -1,6 +1,5 @@
 package cl.apipedidos.ubicacion.entity;
 
-import cl.apipedidos.cliente.entity.Cliente;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,43 +22,43 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "comunas")
+@Table(name = "provincias")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Comuna {
+public class Provincia {
 
     @Id
-    @Column(name = "id_comuna", nullable = false, length = 5, updatable = false)
-    private String idComuna;
+    @Column(name = "id_provincia", nullable = false, length = 3, updatable = false)
+    private String idProvincia;
 
     @NotBlank
     @Size(max = 120)
-    @Column(name = "nombre_comuna", nullable = false, unique = true, length = 120)
-    private String nombreComuna;
+    @Column(name = "nombre_provincia", nullable = false, unique = true, length = 120)
+    private String nombreProvincia;
 
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "id_provincia", nullable = false)
-    private Provincia provincia;
+    @JoinColumn(name = "id_region", nullable = false)
+    private Region region;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "comuna")
-    private List<Cliente> clientes = new ArrayList<>();
+    @OneToMany(mappedBy = "provincia")
+    private List<Comuna> comunas = new ArrayList<>();
 
-    public Comuna(String idComuna, String nombreComuna, Provincia provincia) {
-        this(idComuna, nombreComuna, provincia, new ArrayList<>());
+    public Provincia(String idProvincia, String nombreProvincia, Region region) {
+        this(idProvincia, nombreProvincia, region, new ArrayList<>());
     }
 
     @PrePersist
     @PreUpdate
     public void normalize() {
-        if (idComuna != null) {
-            idComuna = idComuna.trim();
+        if (idProvincia != null) {
+            idProvincia = idProvincia.trim();
         }
-        if (nombreComuna != null) {
-            nombreComuna = nombreComuna.trim();
+        if (nombreProvincia != null) {
+            nombreProvincia = nombreProvincia.trim();
         }
     }
 }

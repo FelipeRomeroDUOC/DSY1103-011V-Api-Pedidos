@@ -6,8 +6,10 @@ import cl.apipedidos.cliente.entity.Cliente;
 import cl.apipedidos.cliente.repository.ClienteRepository;
 import cl.apipedidos.ubicacion.entity.Comuna;
 import cl.apipedidos.ubicacion.repository.ComunaRepository;
+import java.text.Normalizer;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -132,8 +134,27 @@ public class ClienteService {
     }
 
     private Comuna resolverComuna(String nombreComuna) {
-        return comunaRepository.findByNombreComunaIgnoreCase(normalizarTexto(nombreComuna))
+        String comunaNormalizada = normalizarTexto(nombreComuna);
+        Optional<Comuna> comunaExacta = comunaRepository.findByNombreComunaIgnoreCase(comunaNormalizada);
+        if (comunaExacta.isPresent()) {
+            return comunaExacta.get();
+        }
+
+        String comunaSinAcentos = normalizarBusquedaComuna(comunaNormalizada);
+        return comunaRepository.findAll().stream()
+            .filter(comuna -> normalizarBusquedaComuna(comuna.getNombreComuna()).equals(comunaSinAcentos))
+            .findFirst()
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Comuna no encontrada"));
+    }
+
+    private String normalizarBusquedaComuna(String valor) {
+        if (valor == null) {
+            return "";
+        }
+
+        String sinEspacios = valor.trim().toLowerCase(Locale.ROOT);
+        String normalizado = Normalizer.normalize(sinEspacios, Normalizer.Form.NFD);
+        return normalizado.replaceAll("\\p{M}+", "");
     }
 
     private boolean esNumerico(String valor) {

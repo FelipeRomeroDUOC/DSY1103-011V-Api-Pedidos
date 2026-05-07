@@ -1,8 +1,10 @@
 package cl.apipedidos.ubicacion.controller;
 
 import cl.apipedidos.ubicacion.dto.ComunaResponseDTO;
+import cl.apipedidos.ubicacion.dto.ProvinciaResponseDTO;
 import cl.apipedidos.ubicacion.dto.RegionResponseDTO;
 import cl.apipedidos.ubicacion.entity.Comuna;
+import cl.apipedidos.ubicacion.entity.Provincia;
 import cl.apipedidos.ubicacion.entity.Region;
 import cl.apipedidos.ubicacion.service.UbicacionService;
 import java.util.List;
@@ -29,6 +31,13 @@ public class UbicacionController {
             .toList());
     }
 
+    @GetMapping("/{idRegion}/provincias")
+    public ResponseEntity<List<ProvinciaResponseDTO>> listarProvinciasPorRegion(@PathVariable String idRegion) {
+        return ResponseEntity.ok(ubicacionService.listarProvinciasPorRegion(idRegion).stream()
+            .map(this::toProvinciaResponseDTO)
+            .toList());
+    }
+
     @GetMapping("/{idRegion}/comunas")
     public ResponseEntity<List<ComunaResponseDTO>> listarComunasPorRegion(@PathVariable String idRegion) {
         return ResponseEntity.ok(ubicacionService.listarComunasPorRegion(idRegion).stream()
@@ -40,12 +49,21 @@ public class UbicacionController {
         return new RegionResponseDTO(region.getIdRegion(), region.getNombreRegion());
     }
 
+    private ProvinciaResponseDTO toProvinciaResponseDTO(Provincia provincia) {
+        return new ProvinciaResponseDTO(
+            provincia.getIdProvincia(),
+            provincia.getNombreProvincia(),
+            provincia.getRegion().getIdRegion(),
+            provincia.getRegion().getNombreRegion()
+        );
+    }
+
     private ComunaResponseDTO toComunaResponseDTO(Comuna comuna) {
         return new ComunaResponseDTO(
             comuna.getIdComuna(),
             comuna.getNombreComuna(),
-            comuna.getRegion().getIdRegion(),
-            comuna.getRegion().getNombreRegion()
+            comuna.getProvincia().getRegion().getIdRegion(),
+            comuna.getProvincia().getRegion().getNombreRegion()
         );
     }
 }

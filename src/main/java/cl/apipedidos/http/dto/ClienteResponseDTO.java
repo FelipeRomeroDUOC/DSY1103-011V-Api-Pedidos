@@ -12,6 +12,7 @@ public record ClienteResponseDTO(
     String emailCl,
     String telefonoCl,
     String comuna,
+    String provincia,
     String region,
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     LocalDate fechaRegistro

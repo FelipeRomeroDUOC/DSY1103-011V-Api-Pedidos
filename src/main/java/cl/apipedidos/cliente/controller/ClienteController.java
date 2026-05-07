@@ -71,7 +71,8 @@ public class ClienteController {
             cliente.getEmailCl(),
             cliente.getTelefonoCl(),
             cliente.getComuna().getNombreComuna(),
-            cliente.getComuna().getRegion().getNombreRegion(),
+            cliente.getComuna().getProvincia().getNombreProvincia(),
+            cliente.getComuna().getProvincia().getRegion().getNombreRegion(),
             cliente.getFechaRegistro()
         );
     }

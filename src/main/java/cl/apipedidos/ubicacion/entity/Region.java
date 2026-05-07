@@ -36,7 +36,7 @@ public class Region {
 
     @JsonIgnore
     @OneToMany(mappedBy = "region")
-    private List<Comuna> comunas = new ArrayList<>();
+    private List<Provincia> provincias = new ArrayList<>();
 
     public Region(String idRegion, String nombreRegion) {
         this(idRegion, nombreRegion, new ArrayList<>());
