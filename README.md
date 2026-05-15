@@ -14,26 +14,25 @@ Este proyecto es una API REST desarrollada en Java con Spring Boot. El foco actu
 - H2 Database para desarrollo local.
 - MySQL y PostgreSQL como opciones de persistencia alternativa.
 
-## 🧱 Estructura actual
+## 🧱 Estructura del proyecto (diagrama)
 
-- `cl.apipedidos.ApiPedidosApplication`: clase principal de arranque.
-- `cl.apipedidos.cliente.entity.Cliente`: entidad JPA del cliente.
-- `cl.apipedidos.ubicacion.entity.Region`: entidad JPA de regiones de Chile.
-- `cl.apipedidos.ubicacion.entity.Provincia`: entidad JPA de provincias de Chile.
-- `cl.apipedidos.ubicacion.entity.Comuna`: entidad JPA de comunas de Chile.
-- `cl.apipedidos.cliente.repository.ClienteRepository`: acceso a datos.
-- `cl.apipedidos.ubicacion.repository.RegionRepository`: acceso a datos de regiones.
-- `cl.apipedidos.ubicacion.repository.ProvinciaRepository`: acceso a datos de provincias.
-- `cl.apipedidos.ubicacion.repository.ComunaRepository`: acceso a datos de comunas.
-- `cl.apipedidos.cliente.service.ClienteService`: lógica de negocio.
-- `cl.apipedidos.cliente.controller.ClienteController`: endpoints REST.
-- `cl.apipedidos.cliente.dto.*`: DTOs de entrada y salida.
-- `cl.apipedidos.ubicacion.config.UbicacionDataLoader`: carga las regiones, provincias y comunas reales de Chile al iniciar la aplicación.
-- `cl.apipedidos.ubicacion.config.UbicacionSchemaMigrator`: migra datos existentes para completar `id_provincia` en comunas antiguas cuando corresponde.
-- `cl.apipedidos.cliente.config.ClienteDataLoader`: carga datos de ejemplo al iniciar si la tabla está vacía.
-- `cl.apipedidos.cliente.config.ClienteSchemaMigrator`: corrige el esquema al iniciar, elimina filas incompletas y renumera los clientes de forma secuencial.
-- `cl.apipedidos.cliente.gui.RegistroUsuariosStartupListener`: abre el JFrame `RegistroUsuarios` cuando Spring Boot termina de iniciar.
-- `cl.apipedidos.cliente.gui.RegistroUsuarios`: formulario Swing para registrar usuarios mediante `POST` con combos dinámicos.
+```
+Api_Pedidos/
+├─ src/
+│  ├─ main/
+│  │  ├─ java/
+│  │  │  └─ cl/apipedidos/
+│  │  │     ├─ ApiPedidosApplication.java
+│  │  │     ├─ cliente/        # cliente-service (entidades, repos, controller, service, gui)
+│  │  │     ├─ pedido/         # pedido-service (entidades, repos, controller, service)
++│  │  │     └─ ubicacion/      # regiones/provincias/comunas
+│  │  └─ resources/
+│  │     ├─ application.properties
+│  │     ├─ application-h2.properties
+│  │     └─ data/
+│  └─ test/
+└─ docs/
+```
 
 ## 🛠️ Requisitos previos
 
@@ -95,6 +94,13 @@ Por defecto, la aplicación arranca con el perfil `h2` si no se define otro perf
 | `GET` | `/api/regiones` | Listar regiones. |
 | `GET` | `/api/regiones/{idRegion}/provincias` | Listar provincias por región. |
 | `GET` | `/api/regiones/{idRegion}/comunas` | Listar comunas por región. |
+| `POST` | `/api/pedidos` | Crear un pedido validando cliente y productos. |
+| `GET` | `/api/pedidos` | Listar pedidos (filtros: estado, tipo, clienteId). |
+| `GET` | `/api/pedidos/{id}` | Obtener pedido por ID. |
+| `GET` | `/api/pedidos/numero/{numeroPedido}` | Obtener pedido por número único. |
+| `PATCH` | `/api/pedidos/{id}/estado` | Actualizar estado de un pedido. |
+| `DELETE` | `/api/pedidos/{id}` | Eliminar un pedido (según reglas de negocio). |
+| `POST` | `/api/pedidos/{id}/items` | Agregar un item a un pedido existente. |
 
 ## 🧪 Comportamiento funcional
 
@@ -159,7 +165,12 @@ La respuesta de la API incluye la comuna, la provincia y la región asociadas al
 
 ## 📌 Nota de alcance
 
-El proyecto sigue llamándose `Api Pedidos`, pero la funcionalidad implementada hoy corresponde al módulo de clientes. La parte de pedidos y su integración futura todavía no está desarrollada.
+El proyecto ahora incluye dos módulos principales:
+
+- **Cliente-service**: gestión completa de clientes, GUI Swing y carga de ubicaciones.
+- **Pedido-service**: microservicio para gestión de pedidos (creación, consulta, actualización de estado, eliminación) que valida clientes y productos mediante llamadas HTTP a los servicios correspondientes.
+
+La integración básica entre `pedido-service` y `cliente-service` ya está implementada y usa el cliente HTTP compartido del proyecto (`AbstractHttpClient`).
 
 ---
 Desarrollado como parte de un proyecto para la asignatura "Desarrollo Fullstack" de DuocUC.
