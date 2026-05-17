@@ -6,5 +6,5 @@
 *.form
 *.log
 /.DS_Store
-data/*.mv.db
-data/*.trace.db
+**/data/*.mv.db
+**/data/*.trace.db

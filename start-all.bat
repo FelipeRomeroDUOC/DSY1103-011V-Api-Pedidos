@@ -1,0 +1,16 @@
+@echo off
+echo Iniciando microservicios...
+
+echo Levantando Cliente Service (8082)...
+start "Cliente Service" cmd /k ".\mvnw.cmd spring-boot:run -pl cliente-service"
+
+echo Esperando 5 segundos para que Cliente Service inicialice...
+timeout /t 5 /nobreak >nul
+
+echo Levantando Pedido Service (8081)...
+start "Pedido Service" cmd /k ".\mvnw.cmd spring-boot:run -pl pedido-service"
+
+echo Levantando Fabricacion Service (8086)...
+start "Fabricacion Service" cmd /k ".\mvnw.cmd spring-boot:run -pl fabricacion-service"
+
+echo Todos los servicios han sido lanzados.

@@ -1,6 +1,6 @@
 # entidad_cliente
 
-Este módulo implementa la capa de cliente del proyecto bajo el nuevo paquete raíz `cl.apipedidos`. La documentación refleja la estructura real del código, incluyendo persistencia, negocio, API REST, DTOs y el formulario Swing que quedó generado en el árbol del proyecto.
+Este módulo implementa la capa de cliente del proyecto en el microservicio `cliente-service` bajo el nuevo paquete raíz `cl.apipedidos`. La documentación refleja la estructura real del código, incluyendo persistencia, negocio, API REST y DTOs.
 
 **Nota de actualización:** El proyecto ha sido actualizado al **JDK 25**, requiriendo versiones compatibles de Maven y Lombok.
 
@@ -23,10 +23,6 @@ Este módulo implementa la capa de cliente del proyecto bajo el nuevo paquete ra
 | `src/main/java/cl/apipedidos/cliente/dto/ClienteCreateRequestDTO.java` | DTO de entrada para crear clientes. |
 | `src/main/java/cl/apipedidos/cliente/dto/ClienteUpdateRequestDTO.java` | DTO de entrada para actualizar clientes. |
 | `src/main/java/cl/apipedidos/cliente/dto/ClienteResponseDTO.java` | DTO de salida para responder a la API. |
-| `src/main/java/cl/apipedidos/cliente/config/ClienteDataLoader.java` | Inicializador que carga clientes de ejemplo si la tabla está vacía. |
-| `src/main/java/cl/apipedidos/cliente/config/ClienteSchemaMigrator.java` | Ajusta el esquema al iniciar, elimina filas incompletas y renumera los clientes para que queden consecutivos. |
-| `src/main/java/cl/apipedidos/cliente/gui/RegistroUsuariosStartupListener.java` | Listener que abre el JFrame `RegistroUsuarios` cuando Spring Boot termina de iniciar. |
-| `src/main/java/cl/apipedidos/cliente/gui/RegistroUsuarios.java` | Formulario Swing generado por NetBeans para registrar usuarios campo a campo. Actualmente está orientado a envíos `POST` y ya consume el backend HTTP. |
 
 ## 🧩 Modelo de datos
 
@@ -82,7 +78,7 @@ Representa la tabla `comunas` y materializa la relación `Many-to-One` con `Prov
 Archivo: `src/main/java/cl/apipedidos/cliente/entity/Cliente.java`
 
 #### Atributos
-- `idCliente: Long` - Identificador numérico del cliente, asignado de forma secuencial a partir del último ID registrado.
+- `idCliente: Long` - Identificador numérico autoincremental del cliente.
 - `nombreCl: String` - Nombre del cliente.
 - `rutCl: Long` - RUT numérico.
 - `divCl: String` - Dígito verificador del RUT.
@@ -148,7 +144,6 @@ Archivo: `src/main/java/cl/apipedidos/cliente/repository/ClienteRepository.java`
 - `existsByNombreClIgnoreCaseAndIdClienteNot(String nombreCl, Long idCliente)` - Verifica duplicidad de nombre al editar, excluyendo el cliente actual.
 - `existsByRutCl(Long rutCl)` - Verifica si ya existe un RUT registrado.
 - `existsByRutClAndIdClienteNot(Long rutCl, Long idCliente)` - Verifica duplicidad de RUT al editar, excluyendo el cliente actual.
-- `findMaxIdCliente()` - Devuelve el mayor ID registrado para calcular el siguiente correlativo.
 
 #### Qué hace
 Extiende `JpaRepository` y deja a Spring Data JPA la generación automática de consultas.
@@ -162,7 +157,7 @@ Archivo: `src/main/java/cl/apipedidos/cliente/service/ClienteService.java`
 #### Métodos públicos
 - `crear(ClienteCreateRequestDTO request)`
 	- Parámetro: `request` con los datos recibidos desde la capa REST.
-	- Qué hace: valida que el nombre y el RUT no estén duplicados, asigna el siguiente ID disponible, resuelve la comuna real y guarda el registro.
+	- Qué hace: valida que el nombre y el RUT no estén duplicados, resuelve la comuna real y guarda el registro con un ID autoincremental.
 - `listar(String comuna)`
   - Parámetro: `comuna` opcional.
   - Qué hace: devuelve todos los clientes o solo los filtrados por comuna.
@@ -189,7 +184,6 @@ Archivo: `src/main/java/cl/apipedidos/cliente/service/ClienteService.java`
 - `resolverComuna(String nombreComuna)` - Busca la comuna real y devuelve su entidad.
 - `esNumerico(String valor)` - Detecta si el identificador solo contiene dígitos.
 - `buscarClientePorId(Long id)` - Centraliza la búsqueda por ID y la respuesta 404.
-- `siguienteIdCliente()` - Consulta el mayor ID actual y retorna el correlativo siguiente.
 
 #### Qué hace
 Es la capa que concentra la lógica del módulo: validaciones de negocio, normalización, control de duplicados y traducción de errores HTTP.
@@ -284,36 +278,6 @@ Archivo: `src/main/java/cl/apipedidos/cliente/dto/ClienteResponseDTO.java`
 #### Qué hace
 Encapsula la respuesta pública de la API, incluyendo el identificador, la comuna, la provincia y la región asociadas, y la fecha de registro.
 
-## 🧰 Carga de datos iniciales
-
-### `ClienteDataLoader`
-
-Archivo: `src/main/java/cl/apipedidos/cliente/config/ClienteDataLoader.java`
-
-#### Método principal
-- `run(String... args)`
-  - Parámetro: `args` con los argumentos de arranque.
-  - Qué hace: si la tabla está vacía, inserta clientes de ejemplo al iniciar la aplicación.
-
-#### Método auxiliar
-- `crearCliente(String nombre, Long rut, String dv, String direccion, String email, String telefono, String comuna, LocalDate fechaRegistro)`
-  - Parámetros: datos base de cada cliente de ejemplo.
-	- Qué hace: construye una instancia de `Cliente` para persistirla con IDs secuenciales explícitos.
-
-#### Qué hace
-Permite levantar la app con datos de prueba listos para consultar desde Postman o desde una UI. Resuelve la comuna real desde la base de datos antes de guardar cada cliente.
-
-### `ClienteSchemaMigrator`
-
-Archivo: `src/main/java/cl/apipedidos/cliente/config/ClienteSchemaMigrator.java`
-
-#### Método principal
-- `run(String... args)`
-	- Parámetro: `args` con los argumentos de arranque.
-	- Qué hace: asegura las columnas `email_cl` y `telefono_cl`, elimina clientes con datos incompletos y renumera los registros para que los IDs queden consecutivos desde 1.
-
-#### Qué hace
-Actúa como saneamiento automático al iniciar la aplicación. Conserva el esquema existente, limpia filas inválidas y deja los IDs de cliente ordenados sin huecos.
 
 ### `UbicacionDataLoader`
 
@@ -326,45 +290,6 @@ Archivo: `src/main/java/cl/apipedidos/ubicacion/config/UbicacionDataLoader.java`
 
 #### Qué hace
 Inicializa las tablas de ubicación con datos reales, fijos e inmutables.
-
-## 🖥️ Interfaz Swing
-
-### `RegistroUsuarios`
-
-Archivo: `src/main/java/cl/apipedidos/cliente/gui/RegistroUsuarios.java`
-
-#### Métodos
-
-- `RegistroUsuarios()` - Inicializa el formulario llamando a `initComponents()`.
-- `main(String[] args)` - Ejecuta la ventana principal con el look and feel Nimbus cuando esté disponible.
-- `initComponents()` - Método generado por NetBeans que arma la interfaz visual.
-
-#### Campos visibles en la ventana
-
-- `nombreClTxt`
-- `rutClTxt`
-- `rutDVClTxt`
-- `emailClTxt`
-- `telefonoClTxt`
-- `direccionClTxt`
-- `comunaClComboBox`
-- `regionClComboBox`
-- `registroClBtn`
-
-#### Qué hace
-Es un formulario visual para registrar usuarios campo a campo mediante solicitudes `POST`. La captura de comuna y región ya no se hace por texto libre: ahora se selecciona desde combos, lo que prepara la interfaz para trabajar con las entidades reales `Comuna` y `Region`. Email y Teléfono también son obligatorios en la validación local del formulario y ahora viajan en el body del POST. Actualmente ya está enlazado al backend REST, carga catálogos dinámicos y se abre automáticamente al completar el arranque de Spring Boot. En esta versión solo se valida que el RUT sea numérico y se omite la comparación del DV.
-
-## ✅ Estado actual del módulo
-
-- El paquete raíz del proyecto ya quedó en `cl.apipedidos`.
-- La API REST de clientes está disponible y compila correctamente.
-- El módulo de clientes usa DTOs de entrada y salida.
-- La relación geográfica real está modelada como `Region -> Comuna -> Cliente`.
-- El POST de clientes exige `nombre`, `rut`, `dv`, `direccion`, `email`, `telefono` y `comuna`.
-- El proyecto carga datos de ejemplo al arrancar si la tabla está vacía.
-- El ID del cliente se asigna de forma secuencial tomando el mayor ID existente y sumando uno.
-- Al iniciar la app, el esquema de clientes se corrige si faltan columnas y las filas incompletas se eliminan antes de renumerar.
-- La interfaz Swing `RegistroUsuarios` existe, usa combos para región y comuna, se conecta al servicio REST y se abre automáticamente al terminar el arranque de Spring Boot.
 
 ## 🧪 Especificación funcional actual
 

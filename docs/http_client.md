@@ -2,11 +2,11 @@
 
 Este documento define el esqueleto teórico para un consumidor HTTP externo del `cliente-service`. La idea es dejar preparada una pieza reutilizable para que, más adelante, `RegistroUsuarios` o un frontend web consuman la API REST sin depender de repositorios, entidades o servicios internos del backend.
 
-**Nota de actualización:** El proyecto ha sido actualizado al **JDK 25**, requiriendo versiones compatibles de Maven y Lombok.
+**Nota de actualización:** El proyecto ha sido actualizado al **JDK 25**, requiriendo versiones compatibles de Maven y Lombok. Las integraciones HTTP se estandarizan con **Spring Cloud OpenFeign**. `WebClient` sigue disponible solo como soporte de transición en `fabricacion`.
 
 ## Objetivo
 
-- Consumir la API REST del módulo de clientes por HTTP.
+- Consumir la API REST del módulo de clientes por HTTP usando clientes Feign.
 - Poblar los combos de región, provincia y comuna desde la base de datos a través de endpoints.
 - Enviar solicitudes `POST`, `PUT`, `GET` y `DELETE` contra el `cliente-service`.
 - Traducir respuestas y errores HTTP a mensajes utilizables por la interfaz.
@@ -77,6 +77,10 @@ Este es el orden recomendado para construir e integrar el esqueleto:
 
 - `cl.apipedidos.http.client.ClienteApiClient`
 - `cl.apipedidos.http.client.UbicacionApiClient`
+- `cl.apipedidos.http.client.feign.ClienteFeignClient`
+- `cl.apipedidos.http.client.feign.UbicacionFeignClient`
+- `cl.apipedidos.http.client.feign.FeignClientConfig`
+- `cl.apipedidos.fabricacion.config.WebClientConfig`
 - `cl.apipedidos.http.dto.ClienteRequestDTO`
 - `cl.apipedidos.http.dto.ClienteResponseDTO`
 - `cl.apipedidos.http.dto.ApiErrorResponse`
@@ -183,6 +187,11 @@ La API REST ya devuelve respuestas estructuradas para errores de negocio y valid
 - Los conflictos `409` como nombre o RUT duplicado incluyen un mensaje claro en `message`.
 - Los errores `400` de validación pueden incluir mensajes por campo en `errors`.
 - El cliente HTTP puede leer `ApiErrorResponse` directamente y mostrar el texto devuelto por el backend sin recurrir a mensajes genéricos.
+- `FeignErrorDecoder` estandariza la conversión de errores HTTP a `HttpClientException`.
+
+## Estado actual de WebClient
+
+`WebClient` no es la estrategia principal de integración HTTP del repositorio. Hoy queda únicamente como bean de transición en `fabricacion`, para mantener abierta la posibilidad de una migración o uso puntual sin introducir nuevas dependencias.
 
 ## Flujo esperado de la UI
 
