@@ -27,6 +27,7 @@ Api_Pedidos/
 ├── despacho-service/          ← Microservicio de Despachos (Puerto 8084)
 ├── estado-service/            ← Microservicio de Auditoría de Estados (Puerto 8085)
 ├── metrica-service/           ← Microservicio Analítico / BI (Puerto 8087)
+├── transportista-service/     ← Microservicio de Transportistas (Puerto 8088)
 └── docs/                      ← Documentación de la API
 ```
 
@@ -39,6 +40,7 @@ Los servicios están completamente desacoplados a nivel de código y se comunica
 - `pedido-service (8081)` ──Feign──► `producto-service (8083)` (Valida catálogo y obtiene precio)
 - `pedido-service (8081)` ──Feign──► `estado-service (8085)` (Notifica asincrónicamente el cambio de estado)
 - `despacho-service (8084)` ──Feign──► `pedido-service (8081)` (Verifica estado LISTO)
+- `despacho-service (8084)` ──Feign──► `transportista-service (8088)` (Valida transportista en despachos REGION)
 - `metrica-service (8087)` ──Feign──► `pedido-service (8081)` y `cliente-service (8082)` (Agregación de inteligencia de negocios)
 
 ## 🌐 Microservicios y Endpoints
@@ -112,6 +114,15 @@ Motor de agregación e inteligencia comercial. Consume datos en tiempo real.
 - `GET /api/metricas/ventas`: Ingresos totales en un periodo específico.
 - `GET /api/metricas/ping`: Healthcheck.
 
+### 8. `transportista-service` (http://localhost:8088)
+Gestiona el catálogo de proveedores de transporte externos y sus zonas de cobertura.
+
+- `POST /api/transportistas`: Registra un nuevo proveedor de transporte.
+- `GET /api/transportistas`: Lista los transportistas habilitados en el sistema.
+- `GET /api/transportistas/{id}`: Obtiene el detalle de un transportista.
+- `PUT /api/transportistas/{id}`: Actualiza los datos de un transportista (incluyendo activación).
+- `GET /api/transportistas/ping`: Healthcheck.
+
 ## ▶️ Cómo ejecutar el proyecto
 
 Para correr la plataforma en desarrollo local, debes levantar los microservicios en terminales separadas.
@@ -153,6 +164,11 @@ Desde la raíz del proyecto (`Api_Pedidos/`), ejecuta:
 ./mvnw spring-boot:run -pl metrica-service
 ```
 
+**Terminal 8 (Transportistas):**
+```bash
+./mvnw spring-boot:run -pl transportista-service
+```
+
 O si prefieres utilizar el script de conveniencia para Windows:
 ```cmd
 start-all.bat
@@ -168,6 +184,7 @@ Cada microservicio mantiene su propia base de datos independiente (Base de Datos
 - `despacho-service/data/despacho_service.mv.db`
 - `estado-service/data/estado_service.mv.db`
 - `metrica-service/data/metrica_service.mv.db`
+- `transportista-service/data/transportista_service.mv.db`
 
 La configuración de H2 se realiza mediante los archivos `application-h2.properties` ubicados en el bloque `src/main/resources/` de cada módulo.
 
