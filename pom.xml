@@ -24,6 +24,7 @@
         <module>fabricacion-service</module>
         <module>producto-service</module>
         <module>despacho-service</module>
+        <module>estado-service</module>
     </modules>
 
     <properties>

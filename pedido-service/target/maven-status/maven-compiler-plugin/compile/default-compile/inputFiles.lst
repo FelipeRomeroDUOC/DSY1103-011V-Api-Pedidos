@@ -11,7 +11,9 @@ C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\pedido-service\src\main\j
 C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\pedido-service\src\main\java\cl\apipedidos\http\dto\ComunaResponseDTO.java
 C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\pedido-service\src\main\java\cl\apipedidos\http\dto\RegionResponseDTO.java
 C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\pedido-service\src\main\java\cl\apipedidos\http\error\HttpClientException.java
+C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\pedido-service\src\main\java\cl\apipedidos\pedido\client\CambioEstadoRequestDTO.java
 C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\pedido-service\src\main\java\cl\apipedidos\pedido\client\ClienteServiceClient.java
+C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\pedido-service\src\main\java\cl\apipedidos\pedido\client\EstadoFeignClient.java
 C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\pedido-service\src\main\java\cl\apipedidos\pedido\controller\PedidoController.java
 C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\pedido-service\src\main\java\cl\apipedidos\pedido\dto\ApiResponse.java
 C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\pedido-service\src\main\java\cl\apipedidos\pedido\dto\CreateItemRequest.java

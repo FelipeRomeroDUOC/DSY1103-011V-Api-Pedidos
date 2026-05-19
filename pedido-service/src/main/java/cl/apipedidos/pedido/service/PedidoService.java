@@ -1,6 +1,8 @@
 package cl.apipedidos.pedido.service;
 
+import cl.apipedidos.pedido.client.CambioEstadoRequestDTO;
 import cl.apipedidos.pedido.client.ClienteServiceClient;
+import cl.apipedidos.pedido.client.EstadoFeignClient;
 import cl.apipedidos.pedido.dto.CreateItemRequest;
 import cl.apipedidos.pedido.dto.CreatePedidoRequest;
 import cl.apipedidos.pedido.dto.ItemPedidoDTO;
@@ -28,15 +30,18 @@ public class PedidoService {
     private final PedidoRepository pedidoRepository;
     private final ItemPedidoRepository itemPedidoRepository;
     private final ClienteServiceClient clienteServiceClient;
+    private final EstadoFeignClient estadoFeignClient;
 
     public PedidoService(
         PedidoRepository pedidoRepository,
         ItemPedidoRepository itemPedidoRepository,
-        ClienteServiceClient clienteServiceClient
+        ClienteServiceClient clienteServiceClient,
+        EstadoFeignClient estadoFeignClient
     ) {
         this.pedidoRepository = pedidoRepository;
         this.itemPedidoRepository = itemPedidoRepository;
         this.clienteServiceClient = clienteServiceClient;
+        this.estadoFeignClient = estadoFeignClient;
     }
 
     public PedidoDTO crearPedido(CreatePedidoRequest request) {
@@ -125,9 +130,24 @@ public class PedidoService {
 
     public PedidoDTO actualizarEstadoPedido(Long id, UpdateEstadoRequest request) {
         Pedido pedido = buscarPedidoPorId(id);
-        validarTransicionEstado(pedido.getEstado(), request.nuevoEstado());
+        EstadoPedido estadoAnterior = pedido.getEstado();
+        validarTransicionEstado(estadoAnterior, request.nuevoEstado());
         pedido.setEstado(request.nuevoEstado());
-        return toDTO(pedidoRepository.save(pedido));
+        Pedido pedidoGuardado = pedidoRepository.save(pedido);
+
+        try {
+            CambioEstadoRequestDTO cambio = new CambioEstadoRequestDTO(
+                pedido.getId(),
+                estadoAnterior.name(),
+                request.nuevoEstado().name(),
+                null
+            );
+            estadoFeignClient.registrarCambio(cambio);
+        } catch (Exception e) {
+            log.error("Error al notificar cambio de estado a estado-service: {}", e.getMessage());
+        }
+
+        return toDTO(pedidoGuardado);
     }
 
     public void eliminarPedido(Long id) {

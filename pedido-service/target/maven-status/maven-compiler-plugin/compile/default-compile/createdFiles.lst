@@ -1,6 +1,8 @@
 cl\apipedidos\http\dto\ClienteUpdateRequestDTO.class
 cl\apipedidos\pedido\controller\PedidoController.class
 cl\apipedidos\pedido\repository\PedidoRepository.class
+cl\apipedidos\pedido\client\EstadoFeignClient.class
+cl\apipedidos\pedido\client\CambioEstadoRequestDTO.class
 cl\apipedidos\pedido\entity\ItemPedido.class
 cl\apipedidos\pedido\entity\TipoDespacho.class
 cl\apipedidos\pedido\dto\ApiResponse.class
