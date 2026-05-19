@@ -158,6 +158,9 @@ A continuación, la secuencia de flujo completo a través de los microservicios:
 ## 🧪 Notas Técnicas de la Refactorización
 
 - **Soporte de PATCH en Feign:** Para soportar el verbo HTTP `PATCH` en la comunicación entre microservicios, el framework OpenFeign fue configurado para utilizar **OkHttp** en lugar de `HttpURLConnection` de Java (el cual bloquea métodos PATCH). Esto se habilita con `spring.cloud.openfeign.okhttp.enabled=true`.
+- **Estandarización de Respuesta (ApiResponse<T>):** Todos los endpoints REST ahora devuelven un objeto genérico uniforme (`{mensaje, data, exitoso, timestamp}`), garantizando una estructura predecible para los consumidores del API. Las interfaces de Feign también esperan este envoltorio y extraen los datos en tiempo de ejecución.
+- **Inyección de Dependencias Limpia:** Se adoptó la anotación `@RequiredArgsConstructor` de Lombok a nivel de clase para inyectar dependencias (vía `private final`), eliminando el código repetitivo de constructores manuales.
+- **Optimización JPA y Generación de IDs:** Se reemplazó el uso riesgoso de `@Data` en las entidades por `@Getter` y `@Setter` explícitos. Toda generación de identificador primario (`@Id`) fue delegada 100% a la base de datos a través de `@GeneratedValue(strategy = GenerationType.IDENTITY)`.
 - **Atomicidad y Transacciones:** Las operaciones de cambio de estado en `fabricacion-service` están resguardadas por `@Transactional`. Si la llamada Feign hacia `pedido-service` falla, los cambios en la base de datos de fabricación realizan un *rollback* para mantener la consistencia eventual.
 - **Auto-Carga de Datos:** Al iniciar `cliente-service` con la base vacía, las regiones y comunas de Chile se importan automáticamente desde el recurso JSON provisto para disponer de las ubicaciones.
 
