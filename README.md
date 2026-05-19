@@ -25,6 +25,7 @@ Api_Pedidos/
 ├── pedido-service/            ← Microservicio de Pedidos (Puerto 8081)
 ├── fabricacion-service/       ← Microservicio de Manufactura (Puerto 8086)
 ├── despacho-service/          ← Microservicio de Despachos (Puerto 8084)
+├── estado-service/            ← Microservicio de Auditoría de Estados (Puerto 8085)
 └── docs/                      ← Documentación de la API
 ```
 
@@ -35,6 +36,7 @@ Los servicios están completamente desacoplados a nivel de código y se comunica
 - `fabricacion-service (8086)` ──Feign──► `pedido-service (8081)`
 - `pedido-service (8081)` ──Feign──► `cliente-service (8082)` (Valida cliente)
 - `pedido-service (8081)` ──Feign──► `producto-service (8083)` (Valida catálogo y obtiene precio)
+- `pedido-service (8081)` ──Feign──► `estado-service (8085)` (Notifica asincrónicamente el cambio de estado)
 - `despacho-service (8084)` ──Feign──► `pedido-service (8081)` (Verifica estado LISTO)
 
 ## 🌐 Microservicios y Endpoints
@@ -92,6 +94,13 @@ Gestiona el envío o retiro de los pedidos terminados.
 - `PUT /api/despachos/{id}`: Actualiza transportista o tracking.
 - `GET /api/despachos/ping`: Healthcheck.
 
+### 6. `estado-service` (http://localhost:8085)
+Gestiona la auditoría histórica de los cambios de estado de todos los pedidos. **Servicio pasivo**.
+
+- `POST /api/estados`: Registra un cambio (usado internamente por `pedido-service`).
+- `GET /api/estados/{pedidoId}`: Devuelve el historial inmutable de saltos de estado del pedido especificado.
+- `GET /api/estados/ping`: Healthcheck.
+
 ## ▶️ Cómo ejecutar el proyecto
 
 Para correr la plataforma en desarrollo local, debes levantar los microservicios en terminales separadas.
@@ -123,6 +132,11 @@ Desde la raíz del proyecto (`Api_Pedidos/`), ejecuta:
 ./mvnw spring-boot:run -pl despacho-service
 ```
 
+**Terminal 6 (Estados):**
+```bash
+./mvnw spring-boot:run -pl estado-service
+```
+
 O si prefieres utilizar el script de conveniencia para Windows:
 ```cmd
 start-all.bat
@@ -136,6 +150,7 @@ Cada microservicio mantiene su propia base de datos independiente (Base de Datos
 - `pedido-service/data/pedido_service.mv.db`
 - `fabricacion-service/data/fabricacion_service.mv.db`
 - `despacho-service/data/despacho_service.mv.db`
+- `estado-service/data/estado_service.mv.db`
 
 La configuración de H2 se realiza mediante los archivos `application-h2.properties` ubicados en el bloque `src/main/resources/` de cada módulo.
 
@@ -215,6 +230,10 @@ A continuación, la secuencia de flujo completo a través de los microservicios:
 }
 ```
 *(Requiere que el pedido esté en estado `LISTO` previo en `pedido-service`)*
+
+### 7. Ver historial de estados (`estado-service`)
+**GET** `http://localhost:8085/api/estados/1`
+*(Retornará el salto a `EN_FABRICACION` y a `LISTO` que fueron registrados tras bambalinas)*
 
 ## 🧪 Notas Técnicas de la Refactorización
 
