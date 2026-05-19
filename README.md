@@ -21,6 +21,7 @@ El proyecto pasó de ser un monolito a una arquitectura multi-módulo real:
 Api_Pedidos/
 ├── pom.xml                    ← POM padre (gestión centralizada de dependencias)
 ├── cliente-service/           ← Microservicio de Clientes y Ubicaciones (Puerto 8082)
+├── producto-service/          ← Microservicio de Catálogo de Productos (Puerto 8083)
 ├── pedido-service/            ← Microservicio de Pedidos (Puerto 8081)
 ├── fabricacion-service/       ← Microservicio de Manufactura (Puerto 8086)
 └── docs/                      ← Documentación de la API
@@ -30,7 +31,9 @@ Api_Pedidos/
 
 Los servicios están completamente desacoplados a nivel de código y se comunican a través de peticiones HTTP utilizando clientes Feign. El flujo principal es el siguiente:
 
-`fabricacion-service (8086)` ──Feign──► `pedido-service (8081)` ──Feign──► `cliente-service (8082)`
+- `fabricacion-service (8086)` ──Feign──► `pedido-service (8081)`
+- `pedido-service (8081)` ──Feign──► `cliente-service (8082)` (Valida cliente)
+- `pedido-service (8081)` ──Feign──► `producto-service (8083)` (Valida catálogo y obtiene precio)
 
 ## 🌐 Microservicios y Endpoints
 
@@ -49,7 +52,18 @@ Gestiona el catálogo completo de clientes y el mapa de ubicaciones (Regiones, P
 - `GET /api/regiones/{idRegion}/provincias`: Lista provincias por región.
 - `GET /api/regiones/{idRegion}/comunas`: Lista comunas por región.
 
-### 2. `pedido-service` (http://localhost:8081)
+### 2. `producto-service` (http://localhost:8083)
+Gestiona el catálogo de productos disponibles para la venta.
+
+- `POST /api/productos`: Crea un producto nuevo.
+- `GET /api/productos`: Lista todos los productos activos (acepta `?incluirInactivos=true`).
+- `GET /api/productos/{id}`: Obtiene un producto por ID.
+- `PUT /api/productos/{id}`: Actualiza un producto existente.
+- `DELETE /api/productos/{id}`: Desactiva un producto (Soft delete).
+- `PATCH /api/productos/{id}/activar`: Reactiva un producto desactivado.
+- `GET /api/productos/ping`: Healthcheck.
+
+### 3. `pedido-service` (http://localhost:8081)
 Gestiona la creación y el ciclo de vida de los pedidos.
 
 - `POST /api/pedidos`: Crea un pedido (valida que el cliente exista en `cliente-service`).
@@ -59,7 +73,7 @@ Gestiona la creación y el ciclo de vida de los pedidos.
 - `PATCH /api/pedidos/{id}/estado`: Actualiza el estado de un pedido (PENDIENTE, EN_FABRICACION, LISTO, etc).
 - `DELETE /api/pedidos/{id}`: Elimina un pedido.
 
-### 3. `fabricacion-service` (http://localhost:8086)
+### 4. `fabricacion-service` (http://localhost:8086)
 Orquesta el ensamblaje de los pedidos de manufactura.
 
 - `POST /api/fabricacion`: Crea una orden de fabricación asociada a un ID de pedido.
@@ -69,7 +83,7 @@ Orquesta el ensamblaje de los pedidos de manufactura.
 
 ## ▶️ Cómo ejecutar el proyecto
 
-Para correr la plataforma en desarrollo local, debes levantar los tres microservicios en terminales separadas.
+Para correr la plataforma en desarrollo local, debes levantar los microservicios en terminales separadas.
 
 Desde la raíz del proyecto (`Api_Pedidos/`), ejecuta:
 
@@ -83,7 +97,12 @@ Desde la raíz del proyecto (`Api_Pedidos/`), ejecuta:
 ./mvnw spring-boot:run -pl pedido-service
 ```
 
-**Terminal 3 (Fabricación):**
+**Terminal 3 (Productos):**
+```bash
+./mvnw spring-boot:run -pl producto-service
+```
+
+**Terminal 4 (Fabricación):**
 ```bash
 ./mvnw spring-boot:run -pl fabricacion-service
 ```
@@ -97,6 +116,7 @@ start-all.bat
 
 Cada microservicio mantiene su propia base de datos independiente (Base de Datos por Servicio). Por defecto, utilizan H2 en archivo local, almacenando su persistencia en:
 - `cliente-service/data/cliente_service.mv.db`
+- `producto-service/data/producto_service.mv.db`
 - `pedido-service/data/pedido_service.mv.db`
 - `fabricacion-service/data/fabricacion_service.mv.db`
 
@@ -120,7 +140,18 @@ A continuación, la secuencia de flujo completo a través de los microservicios:
 }
 ```
 
-### 2. Crear un Pedido (`pedido-service`)
+### 2. Crear un Producto (`producto-service`)
+**POST** `http://localhost:8083/api/productos`
+```json
+{
+  "nombre": "Silla Ergonómica Pro",
+  "descripcion": "Silla de oficina con soporte lumbar ajustable",
+  "categoria": "Mobiliario",
+  "precioBase": 149990.0
+}
+```
+
+### 3. Crear un Pedido (`pedido-service`)
 **POST** `http://localhost:8081/api/pedidos`
 ```json
 {
@@ -128,15 +159,15 @@ A continuación, la secuencia de flujo completo a través de los microservicios:
   "tipoDespacho": "DOMICILIO",
   "items": [
     {
-      "productoId": 100,
+      "productoId": 1,
       "cantidad": 2
     }
   ]
 }
 ```
-*(Valida que el cliente 1 exista consultando a `cliente-service`)*
+*(Valida que el cliente 1 exista en `cliente-service` y que el producto 1 exista en `producto-service`)*
 
-### 3. Iniciar Fabricación (`fabricacion-service`)
+### 4. Iniciar Fabricación (`fabricacion-service`)
 **POST** `http://localhost:8086/api/fabricacion`
 ```json
 {
@@ -146,7 +177,7 @@ A continuación, la secuencia de flujo completo a través de los microservicios:
 ```
 *(Cambiará el estado del pedido a `EN_FABRICACION` internamente en `pedido-service`)*
 
-### 4. Finalizar Fabricación (`fabricacion-service`)
+### 5. Finalizar Fabricación (`fabricacion-service`)
 **PATCH** `http://localhost:8086/api/fabricacion/1/estado`
 ```json
 {
