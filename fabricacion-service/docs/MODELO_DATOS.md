@@ -97,6 +97,8 @@ Se almacena como `VARCHAR` (EnumType.STRING) en ambas tablas.
 ```java
 @Entity
 @Table(name = "ordenes_fabricacion")
+@Getter
+@Setter
 public class OrdenFabricacion {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -120,8 +122,8 @@ public class OrdenFabricacion {
 ```
 
 **Lifecycle Callbacks:**
-- `@PrePersist`: Asigna `fechaCreacion`, `fechaInicio` y estado `EN_PROCESO` si son `null`.
-- `@PreUpdate`: Actualiza `fechaActualizacion`.
+- `@PrePersist` (método `beforeCreate()`): Asigna `fechaCreacion`, `fechaInicio` y estado `EN_PROCESO` si son `null`.
+- `@PreUpdate` (método `beforeUpdate()`): Actualiza `fechaActualizacion`.
 
 ### `HistorialFabricacion`
 

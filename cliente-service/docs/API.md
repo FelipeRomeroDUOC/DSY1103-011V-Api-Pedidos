@@ -2,15 +2,29 @@
 
 > Base URL: `http://localhost:8082`
 
+## Formato de Respuesta Estándar (ApiResponse)
+
+**TODAS** las respuestas exitosas y de error utilizan el siguiente formato de envoltura:
+
+```json
+{
+  "mensaje": "Descripción de la operación",
+  "data": { ... }, // DTO, Lista, o null en caso de error
+  "exitoso": true,
+  "timestamp": "2026-05-18T12:00:00-04:00"
+}
+```
+
+---
+
 ## Formato de Error Estándar
 
 ```json
 {
-  "status": 404,
-  "message": "Cliente no encontrado",
-  "path": "/api/clientes/99",
-  "timestamp": "2026-05-18T12:00:00-04:00",
-  "errors": null
+  "mensaje": "Cliente no encontrado",
+  "data": null,
+  "exitoso": false,
+  "timestamp": "2026-05-18T12:00:00-04:00"
 }
 ```
 
@@ -50,17 +64,22 @@ curl -X POST http://localhost:8082/api/clientes \
 
 ```json
 {
-  "idCliente": 1,
-  "nombreCl": "Ana Pérez",
-  "rutCl": 12345678,
-  "divCl": "9",
-  "direccionCl": "Av. Providencia 123",
-  "emailCl": "ana@ejemplo.cl",
-  "telefonoCl": "+56912345678",
-  "comuna": "Providencia",
-  "provincia": "Santiago",
-  "region": "Metropolitana de Santiago",
-  "fechaRegistro": "18/05/2026"
+  "mensaje": "Cliente creado exitosamente",
+  "data": {
+    "idCliente": 1,
+    "nombreCl": "Ana Pérez",
+    "rutCl": 12345678,
+    "divCl": "9",
+    "direccionCl": "Av. Providencia 123",
+    "emailCl": "ana@ejemplo.cl",
+    "telefonoCl": "+56912345678",
+    "comuna": "Providencia",
+    "provincia": "Santiago",
+    "region": "Metropolitana de Santiago",
+    "fechaRegistro": "18/05/2026"
+  },
+  "exitoso": true,
+  "timestamp": "2026-05-18T12:00:00"
 }
 ```
 

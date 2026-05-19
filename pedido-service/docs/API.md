@@ -2,15 +2,29 @@
 
 > Base URL: `http://localhost:8081`
 
+## Formato de Respuesta Estándar (ApiResponse)
+
+**TODAS** las respuestas exitosas y de error utilizan el siguiente formato de envoltura:
+
+```json
+{
+  "mensaje": "Descripción de la operación",
+  "data": { ... }, // DTO, Lista, o null en caso de error
+  "exitoso": true,
+  "timestamp": "2026-05-18T12:00:00-04:00"
+}
+```
+
+---
+
 ## Formato de Error Estándar
 
 ```json
 {
-  "status": 404,
-  "message": "Pedido no encontrado: 99",
-  "path": "/api/pedidos/99",
-  "timestamp": "2026-05-18T12:00:00-04:00",
-  "errors": null
+  "mensaje": "Pedido no encontrado: 99",
+  "data": null,
+  "exitoso": false,
+  "timestamp": "2026-05-18T12:00:00-04:00"
 }
 ```
 
