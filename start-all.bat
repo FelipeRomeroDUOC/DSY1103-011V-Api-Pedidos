@@ -28,4 +28,7 @@ start "metrica-service" cmd /k "mvnw.cmd spring-boot:run -pl metrica-service"
 echo Arrancando transportista-service (Puerto 8088)...
 start "transportista-service" cmd /k "mvnw.cmd spring-boot:run -pl transportista-service"
 
+echo Arrancando log-service (Puerto 8089)...
+start "log-service" cmd /k "mvnw.cmd spring-boot:run -pl log-service"
+
 echo Todos los servicios han sido lanzados.

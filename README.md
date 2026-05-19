@@ -24,6 +24,7 @@ Api_Pedidos/
 ├── producto-service/          ← Microservicio de Catálogo de Productos (Puerto 8083)
 ├── pedido-service/            ← Microservicio de Pedidos (Puerto 8081)
 ├── fabricacion-service/       ← Microservicio de Manufactura (Puerto 8086)
+├── log-service/               ← Microservicio de Logs y Trazabilidad (Puerto 8089)
 ├── despacho-service/          ← Microservicio de Despachos (Puerto 8084)
 ├── estado-service/            ← Microservicio de Auditoría de Estados (Puerto 8085)
 ├── metrica-service/           ← Microservicio Analítico / BI (Puerto 8087)
@@ -39,6 +40,7 @@ Los servicios están completamente desacoplados a nivel de código y se comunica
 - `pedido-service (8081)` ──Feign──► `cliente-service (8082)` (Valida cliente)
 - `pedido-service (8081)` ──Feign──► `producto-service (8083)` (Valida catálogo y obtiene precio)
 - `pedido-service (8081)` ──Feign──► `estado-service (8085)` (Notifica asincrónicamente el cambio de estado)
+- `pedido-service (8081)` ──POST──► `log-service (8089)` (Registra trazabilidad operativa)
 - `despacho-service (8084)` ──Feign──► `pedido-service (8081)` (Verifica estado LISTO)
 - `despacho-service (8084)` ──Feign──► `transportista-service (8088)` (Valida transportista en despachos REGION)
 - `metrica-service (8087)` ──Feign──► `pedido-service (8081)` y `cliente-service (8082)` (Agregación de inteligencia de negocios)
@@ -89,7 +91,14 @@ Orquesta el ensamblaje de los pedidos de manufactura.
 - `PATCH /api/fabricacion/{id}/estado`: Cambia el estado de una orden (ej. a `TERMINADO`) y notifica automáticamente al `pedido-service`.
 - `GET /api/fabricacion/ping`: Healthcheck.
 
-### 5. `despacho-service` (http://localhost:8084)
+### 5. `log-service` (http://localhost:8089)
+Registra eventos operativos y de auditoría generados por los demás microservicios.
+
+- `POST /api/logs`: Registra una nueva entrada de log.
+- `GET /api/logs`: Lista logs con filtros opcionales por servicio y fecha.
+- `GET /api/logs/ping`: Healthcheck.
+
+### 6. `despacho-service` (http://localhost:8084)
 Gestiona el envío o retiro de los pedidos terminados.
 
 - `POST /api/despachos`: Registra un despacho validando que el pedido esté `LISTO`.
@@ -98,14 +107,14 @@ Gestiona el envío o retiro de los pedidos terminados.
 - `PUT /api/despachos/{id}`: Actualiza transportista o tracking.
 - `GET /api/despachos/ping`: Healthcheck.
 
-### 6. `estado-service` (http://localhost:8085)
+### 7. `estado-service` (http://localhost:8085)
 Gestiona la auditoría histórica de los cambios de estado de todos los pedidos. **Servicio pasivo**.
 
 - `POST /api/estados`: Registra un cambio (usado internamente por `pedido-service`).
 - `GET /api/estados/{pedidoId}`: Devuelve el historial inmutable de saltos de estado del pedido especificado.
 - `GET /api/estados/ping`: Healthcheck.
 
-### 7. `metrica-service` (http://localhost:8087)
+### 8. `metrica-service` (http://localhost:8087)
 Motor de agregación e inteligencia comercial. Consume datos en tiempo real.
 
 - `GET /api/metricas/clientes/{id}`: Análisis de comportamiento (Frecuencia, monto gastado).
@@ -114,7 +123,7 @@ Motor de agregación e inteligencia comercial. Consume datos en tiempo real.
 - `GET /api/metricas/ventas`: Ingresos totales en un periodo específico.
 - `GET /api/metricas/ping`: Healthcheck.
 
-### 8. `transportista-service` (http://localhost:8088)
+### 9. `transportista-service` (http://localhost:8088)
 Gestiona el catálogo de proveedores de transporte externos y sus zonas de cobertura.
 
 - `POST /api/transportistas`: Registra un nuevo proveedor de transporte.
@@ -149,22 +158,27 @@ Desde la raíz del proyecto (`Api_Pedidos/`), ejecuta:
 ./mvnw spring-boot:run -pl fabricacion-service
 ```
 
-**Terminal 5 (Despachos):**
+**Terminal 5 (Logs):**
+```bash
+./mvnw spring-boot:run -pl log-service
+```
+
+**Terminal 6 (Despachos):**
 ```bash
 ./mvnw spring-boot:run -pl despacho-service
 ```
 
-**Terminal 6 (Estados):**
+**Terminal 7 (Estados):**
 ```bash
 ./mvnw spring-boot:run -pl estado-service
 ```
 
-**Terminal 7 (Métricas):**
+**Terminal 8 (Métricas):**
 ```bash
 ./mvnw spring-boot:run -pl metrica-service
 ```
 
-**Terminal 8 (Transportistas):**
+**Terminal 9 (Transportistas):**
 ```bash
 ./mvnw spring-boot:run -pl transportista-service
 ```
@@ -181,6 +195,7 @@ Cada microservicio mantiene su propia base de datos independiente (Base de Datos
 - `producto-service/data/producto_service.mv.db`
 - `pedido-service/data/pedido_service.mv.db`
 - `fabricacion-service/data/fabricacion_service.mv.db`
+- `log-service/data/log_service.mv.db`
 - `despacho-service/data/despacho_service.mv.db`
 - `estado-service/data/estado_service.mv.db`
 - `metrica-service/data/metrica_service.mv.db`
