@@ -7,8 +7,10 @@ import cl.apipedidos.pedido.dto.UpdateEstadoRequest;
 import cl.apipedidos.pedido.entity.EstadoPedido;
 import cl.apipedidos.pedido.entity.TipoDespacho;
 import cl.apipedidos.pedido.service.PedidoService;
+import cl.apipedidos.pedido.dto.ApiResponse;
 import jakarta.validation.Valid;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,54 +25,51 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/pedidos")
+@RequiredArgsConstructor
 public class PedidoController {
 
     private final PedidoService pedidoService;
 
-    public PedidoController(PedidoService pedidoService) {
-        this.pedidoService = pedidoService;
-    }
-
     @PostMapping
-    public ResponseEntity<PedidoDTO> crearPedido(@Valid @RequestBody CreatePedidoRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(pedidoService.crearPedido(request));
+    public ResponseEntity<ApiResponse<PedidoDTO>> crearPedido(@Valid @RequestBody CreatePedidoRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success("Pedido creado exitosamente", pedidoService.crearPedido(request)));
     }
 
     @GetMapping
-    public ResponseEntity<List<PedidoDTO>> listarPedidos(
+    public ResponseEntity<ApiResponse<List<PedidoDTO>>> listarPedidos(
         @RequestParam(required = false) EstadoPedido estado,
         @RequestParam(required = false) TipoDespacho tipo,
         @RequestParam(required = false) Long clienteId
     ) {
-        return ResponseEntity.ok(pedidoService.listarPedidos(estado, tipo, clienteId));
+        return ResponseEntity.ok(ApiResponse.success("Listado de pedidos", pedidoService.listarPedidos(estado, tipo, clienteId)));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PedidoDTO> obtenerPedido(@PathVariable Long id) {
-        return ResponseEntity.ok(pedidoService.obtenerPedido(id));
+    public ResponseEntity<ApiResponse<PedidoDTO>> obtenerPedido(@PathVariable Long id) {
+        return ResponseEntity.ok(ApiResponse.success("Pedido encontrado", pedidoService.obtenerPedido(id)));
     }
 
     @GetMapping("/numero/{numeroPedido}")
-    public ResponseEntity<PedidoDTO> obtenerPedidoPorNumero(@PathVariable String numeroPedido) {
-        return ResponseEntity.ok(pedidoService.obtenerPedidoPorNumero(numeroPedido));
+    public ResponseEntity<ApiResponse<PedidoDTO>> obtenerPedidoPorNumero(@PathVariable String numeroPedido) {
+        return ResponseEntity.ok(ApiResponse.success("Pedido encontrado", pedidoService.obtenerPedidoPorNumero(numeroPedido)));
     }
 
     @GetMapping("/{id}/items")
-    public ResponseEntity<List<ItemPedidoDTO>> obtenerItemsPedido(@PathVariable Long id) {
-        return ResponseEntity.ok(pedidoService.obtenerItemsPedido(id));
+    public ResponseEntity<ApiResponse<List<ItemPedidoDTO>>> obtenerItemsPedido(@PathVariable Long id) {
+        return ResponseEntity.ok(ApiResponse.success("Listado de items", pedidoService.obtenerItemsPedido(id)));
     }
 
     @PatchMapping("/{id}/estado")
-    public ResponseEntity<PedidoDTO> actualizarEstado(
+    public ResponseEntity<ApiResponse<PedidoDTO>> actualizarEstado(
         @PathVariable Long id,
         @Valid @RequestBody UpdateEstadoRequest request
     ) {
-        return ResponseEntity.ok(pedidoService.actualizarEstadoPedido(id, request));
+        return ResponseEntity.ok(ApiResponse.success("Estado de pedido actualizado", pedidoService.actualizarEstadoPedido(id, request)));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarPedido(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<Void>> eliminarPedido(@PathVariable Long id) {
         pedidoService.eliminarPedido(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(ApiResponse.success("Pedido eliminado exitosamente", null));
     }
 }

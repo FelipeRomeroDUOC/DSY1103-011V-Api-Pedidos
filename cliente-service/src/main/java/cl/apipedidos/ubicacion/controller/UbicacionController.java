@@ -7,7 +7,9 @@ import cl.apipedidos.ubicacion.entity.Comuna;
 import cl.apipedidos.ubicacion.entity.Provincia;
 import cl.apipedidos.ubicacion.entity.Region;
 import cl.apipedidos.ubicacion.service.UbicacionService;
+import cl.apipedidos.cliente.dto.ApiResponse;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,33 +18,33 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/regiones")
+@RequiredArgsConstructor
 public class UbicacionController {
 
     private final UbicacionService ubicacionService;
 
-    public UbicacionController(UbicacionService ubicacionService) {
-        this.ubicacionService = ubicacionService;
-    }
-
     @GetMapping
-    public ResponseEntity<List<RegionResponseDTO>> listarRegiones() {
-        return ResponseEntity.ok(ubicacionService.listarRegiones().stream()
+    public ResponseEntity<ApiResponse<List<RegionResponseDTO>>> listarRegiones() {
+        List<RegionResponseDTO> regiones = ubicacionService.listarRegiones().stream()
             .map(this::toRegionResponseDTO)
-            .toList());
+            .toList();
+        return ResponseEntity.ok(ApiResponse.success("Listado de regiones", regiones));
     }
 
     @GetMapping("/{idRegion}/provincias")
-    public ResponseEntity<List<ProvinciaResponseDTO>> listarProvinciasPorRegion(@PathVariable String idRegion) {
-        return ResponseEntity.ok(ubicacionService.listarProvinciasPorRegion(idRegion).stream()
+    public ResponseEntity<ApiResponse<List<ProvinciaResponseDTO>>> listarProvinciasPorRegion(@PathVariable String idRegion) {
+        List<ProvinciaResponseDTO> provincias = ubicacionService.listarProvinciasPorRegion(idRegion).stream()
             .map(this::toProvinciaResponseDTO)
-            .toList());
+            .toList();
+        return ResponseEntity.ok(ApiResponse.success("Listado de provincias", provincias));
     }
 
     @GetMapping("/{idRegion}/comunas")
-    public ResponseEntity<List<ComunaResponseDTO>> listarComunasPorRegion(@PathVariable String idRegion) {
-        return ResponseEntity.ok(ubicacionService.listarComunasPorRegion(idRegion).stream()
+    public ResponseEntity<ApiResponse<List<ComunaResponseDTO>>> listarComunasPorRegion(@PathVariable String idRegion) {
+        List<ComunaResponseDTO> comunas = ubicacionService.listarComunasPorRegion(idRegion).stream()
             .map(this::toComunaResponseDTO)
-            .toList());
+            .toList();
+        return ResponseEntity.ok(ApiResponse.success("Listado de comunas", comunas));
     }
 
     private RegionResponseDTO toRegionResponseDTO(Region region) {

@@ -2,8 +2,9 @@ package cl.apipedidos.fabricacion.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -11,7 +12,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "ordenes_fabricacion")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrdenFabricacion {
@@ -49,7 +51,7 @@ public class OrdenFabricacion {
     private List<HistorialFabricacion> historial = new ArrayList<>();
 
     @PrePersist
-    protected void onCreate() {
+    protected void beforeCreate() {
         this.fechaCreacion = LocalDateTime.now();
         if (this.estadoFabricacion == null) {
             this.estadoFabricacion = EstadoFabricacion.EN_PROCESO;
@@ -60,7 +62,7 @@ public class OrdenFabricacion {
     }
 
     @PreUpdate
-    protected void onUpdate() {
+    protected void beforeUpdate() {
         this.fechaActualizacion = LocalDateTime.now();
     }
 }

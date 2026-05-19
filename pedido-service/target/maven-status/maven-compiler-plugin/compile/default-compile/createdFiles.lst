@@ -3,6 +3,7 @@ cl\apipedidos\pedido\controller\PedidoController.class
 cl\apipedidos\pedido\repository\PedidoRepository.class
 cl\apipedidos\pedido\entity\ItemPedido.class
 cl\apipedidos\pedido\entity\TipoDespacho.class
+cl\apipedidos\pedido\dto\ApiResponse.class
 cl\apipedidos\http\dto\ClienteResponseDTO.class
 cl\apipedidos\pedido\dto\UpdateEstadoRequest.class
 cl\apipedidos\pedido\repository\ItemPedidoRepository.class
@@ -17,6 +18,7 @@ cl\apipedidos\pedido\dto\CreatePedidoRequest.class
 cl\apipedidos\http\error\HttpClientException.class
 cl\apipedidos\pedido\dto\ItemPedidoDTO.class
 cl\apipedidos\http\client\feign\ClienteFeignAdapter.class
+cl\apipedidos\http\dto\ApiResponse.class
 cl\apipedidos\http\dto\ComunaResponseDTO.class
 cl\apipedidos\pedido\service\PedidoService$1.class
 cl\apipedidos\config\ApiExceptionHandler.class

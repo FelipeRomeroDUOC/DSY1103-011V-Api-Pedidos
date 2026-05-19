@@ -4,6 +4,7 @@ C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\pedido-service\src\main\j
 C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\pedido-service\src\main\java\cl\apipedidos\http\client\feign\FeignClientConfig.java
 C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\pedido-service\src\main\java\cl\apipedidos\http\client\feign\FeignErrorDecoder.java
 C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\pedido-service\src\main\java\cl\apipedidos\http\dto\ApiErrorResponse.java
+C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\pedido-service\src\main\java\cl\apipedidos\http\dto\ApiResponse.java
 C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\pedido-service\src\main\java\cl\apipedidos\http\dto\ClienteCreateRequestDTO.java
 C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\pedido-service\src\main\java\cl\apipedidos\http\dto\ClienteResponseDTO.java
 C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\pedido-service\src\main\java\cl\apipedidos\http\dto\ClienteUpdateRequestDTO.java
@@ -12,6 +13,7 @@ C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\pedido-service\src\main\j
 C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\pedido-service\src\main\java\cl\apipedidos\http\error\HttpClientException.java
 C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\pedido-service\src\main\java\cl\apipedidos\pedido\client\ClienteServiceClient.java
 C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\pedido-service\src\main\java\cl\apipedidos\pedido\controller\PedidoController.java
+C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\pedido-service\src\main\java\cl\apipedidos\pedido\dto\ApiResponse.java
 C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\pedido-service\src\main\java\cl\apipedidos\pedido\dto\CreateItemRequest.java
 C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\pedido-service\src\main\java\cl\apipedidos\pedido\dto\CreatePedidoRequest.java
 C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\pedido-service\src\main\java\cl\apipedidos\pedido\dto\ItemPedidoDTO.java

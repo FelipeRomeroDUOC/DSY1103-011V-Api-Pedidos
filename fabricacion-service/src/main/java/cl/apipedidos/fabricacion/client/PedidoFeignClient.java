@@ -1,6 +1,7 @@
 package cl.apipedidos.fabricacion.client;
 
 import cl.apipedidos.fabricacion.dto.PedidoDTO;
+import cl.apipedidos.fabricacion.dto.ApiResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -11,10 +12,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface PedidoFeignClient {
 
     @GetMapping("/api/pedidos/{id}")
-    PedidoDTO obtenerPedido(@PathVariable("id") Long id);
+    ApiResponse<PedidoDTO> obtenerPedido(@PathVariable("id") Long id);
 
     @PatchMapping("/api/pedidos/{id}/estado")
-    PedidoDTO actualizarEstado(@PathVariable("id") Long id,
+    ApiResponse<PedidoDTO> actualizarEstado(@PathVariable("id") Long id,
                                @RequestBody UpdateEstadoRequest request);
 
     class UpdateEstadoRequest {

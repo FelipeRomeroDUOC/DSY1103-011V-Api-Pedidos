@@ -19,7 +19,7 @@ public class ClienteFeignAdapter {
 
     public ClienteResponseDTO crearCliente(ClienteCreateRequestDTO request) {
         try {
-            return client.crearCliente(request);
+            return client.crearCliente(request).getData();
         } catch (FeignException exception) {
             throw mapFeignException(exception);
         }
@@ -27,7 +27,7 @@ public class ClienteFeignAdapter {
 
     public List<ClienteResponseDTO> listarClientes(String comuna) {
         try {
-            return client.listarClientes(comuna);
+            return client.listarClientes(comuna).getData();
         } catch (FeignException exception) {
             throw mapFeignException(exception);
         }
@@ -35,7 +35,7 @@ public class ClienteFeignAdapter {
 
     public ClienteResponseDTO obtenerClientePorIdentificador(String identificador) {
         try {
-            return client.obtenerClientePorIdentificador(identificador);
+            return client.obtenerClientePorIdentificador(identificador).getData();
         } catch (FeignException exception) {
             throw mapFeignException(exception);
         }
@@ -43,7 +43,7 @@ public class ClienteFeignAdapter {
 
     public ClienteResponseDTO actualizarCliente(Long id, ClienteUpdateRequestDTO request) {
         try {
-            return client.actualizarCliente(id, request);
+            return client.actualizarCliente(id, request).getData();
         } catch (FeignException exception) {
             throw mapFeignException(exception);
         }

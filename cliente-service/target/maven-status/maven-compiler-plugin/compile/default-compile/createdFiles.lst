@@ -11,7 +11,6 @@ cl\apipedidos\ubicacion\entity\Comuna.class
 cl\apipedidos\cliente\entity\Cliente.class
 cl\apipedidos\ubicacion\service\UbicacionService.class
 cl\apipedidos\ubicacion\config\UbicacionSchemaMigrator.class
-cl\apipedidos\cliente\config\ClienteDataLoader.class
 cl\apipedidos\ubicacion\entity\Region.class
 cl\apipedidos\ubicacion\repository\ProvinciaRepository.class
 cl\apipedidos\cliente\dto\ClienteUpdateRequestDTO.class
@@ -22,4 +21,5 @@ cl\apipedidos\cliente\dto\ClienteResponseDTO.class
 cl\apipedidos\ubicacion\repository\RegionRepository.class
 cl\apipedidos\ubicacion\controller\UbicacionController.class
 cl\apipedidos\config\ApiExceptionHandler.class
+cl\apipedidos\cliente\dto\ApiResponse.class
 cl\apipedidos\ubicacion\dto\ComunaResponseDTO.class

@@ -3,6 +3,7 @@ package cl.apipedidos.http.client.feign;
 import cl.apipedidos.http.dto.ClienteCreateRequestDTO;
 import cl.apipedidos.http.dto.ClienteResponseDTO;
 import cl.apipedidos.http.dto.ClienteUpdateRequestDTO;
+import cl.apipedidos.http.dto.ApiResponse;
 import java.util.List;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,17 +18,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface ClienteFeignClient {
 
     @PostMapping("/api/clientes")
-    ClienteResponseDTO crearCliente(@RequestBody ClienteCreateRequestDTO request);
+    ApiResponse<ClienteResponseDTO> crearCliente(@RequestBody ClienteCreateRequestDTO request);
 
     @GetMapping("/api/clientes")
-    java.util.List<ClienteResponseDTO> listarClientes(@RequestParam(value = "comuna", required = false) String comuna);
+    ApiResponse<java.util.List<ClienteResponseDTO>> listarClientes(@RequestParam(value = "comuna", required = false) String comuna);
 
     @GetMapping("/api/clientes/{id}")
-    ClienteResponseDTO obtenerClientePorIdentificador(@PathVariable("id") String identificador);
+    ApiResponse<ClienteResponseDTO> obtenerClientePorIdentificador(@PathVariable("id") String identificador);
 
     @PutMapping("/api/clientes/{id}")
-    ClienteResponseDTO actualizarCliente(@PathVariable("id") Long id, @RequestBody ClienteUpdateRequestDTO request);
+    ApiResponse<ClienteResponseDTO> actualizarCliente(@PathVariable("id") Long id, @RequestBody ClienteUpdateRequestDTO request);
 
     @DeleteMapping("/api/clientes/{id}")
-    void eliminarCliente(@PathVariable("id") Long id);
+    ApiResponse<Void> eliminarCliente(@PathVariable("id") Long id);
 }

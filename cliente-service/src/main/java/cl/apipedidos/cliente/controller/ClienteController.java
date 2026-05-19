@@ -5,10 +5,12 @@ import cl.apipedidos.cliente.dto.ClienteResponseDTO;
 import cl.apipedidos.cliente.dto.ClienteUpdateRequestDTO;
 import cl.apipedidos.cliente.entity.Cliente;
 import cl.apipedidos.cliente.service.ClienteService;
+import cl.apipedidos.cliente.dto.ApiResponse;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,48 +26,46 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/clientes")
+@RequiredArgsConstructor
 @Slf4j
 public class ClienteController {
 
     private final ClienteService clienteService;
 
-    public ClienteController(ClienteService clienteService) {
-        this.clienteService = clienteService;
-    }
-
     @PostMapping
-    public ResponseEntity<ClienteResponseDTO> crearCliente(@Valid @RequestBody ClienteCreateRequestDTO request) {
+    public ResponseEntity<ApiResponse<ClienteResponseDTO>> crearCliente(@Valid @RequestBody ClienteCreateRequestDTO request) {
         log.info("POST /api/clientes nombre={} rut={} comuna={}", request.nombreCl(), request.rutCl(), request.comuna());
         Cliente clienteCreado = clienteService.crear(request);
         return ResponseEntity.created(URI.create("/api/clientes/" + clienteCreado.getIdCliente()))
-            .body(toResponseDTO(clienteCreado));
+            .body(ApiResponse.success("Cliente creado exitosamente", toResponseDTO(clienteCreado)));
     }
 
     @GetMapping
-    public ResponseEntity<List<ClienteResponseDTO>> listarClientes(@RequestParam(required = false) String comuna) {
+    public ResponseEntity<ApiResponse<List<ClienteResponseDTO>>> listarClientes(@RequestParam(required = false) String comuna) {
         log.debug("GET /api/clientes comuna={}", comuna);
-        return ResponseEntity.ok(clienteService.listar(comuna).stream()
+        List<ClienteResponseDTO> clientes = clienteService.listar(comuna).stream()
             .map(this::toResponseDTO)
-            .collect(Collectors.toList()));
+            .collect(Collectors.toList());
+        return ResponseEntity.ok(ApiResponse.success("Listado de clientes", clientes));
     }
 
-    @GetMapping("/{identificador}")
-    public ResponseEntity<ClienteResponseDTO> obtenerCliente(@PathVariable String identificador) {
-        log.debug("GET /api/clientes/{}", identificador);
-        return ResponseEntity.ok(toResponseDTO(clienteService.obtenerPorIdentificador(identificador)));
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<ClienteResponseDTO>> obtenerCliente(@PathVariable String id) {
+        log.debug("GET /api/clientes/{}", id);
+        return ResponseEntity.ok(ApiResponse.success("Cliente encontrado", toResponseDTO(clienteService.obtenerPorIdentificador(id))));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ClienteResponseDTO> actualizarCliente(@PathVariable Long id, @Valid @RequestBody ClienteUpdateRequestDTO request) {
+    public ResponseEntity<ApiResponse<ClienteResponseDTO>> actualizarCliente(@PathVariable Long id, @Valid @RequestBody ClienteUpdateRequestDTO request) {
         log.info("PUT /api/clientes/{} nombre={} rut={}", id, request.nombreCl(), request.rutCl());
-        return ResponseEntity.ok(toResponseDTO(clienteService.actualizar(id, request)));
+        return ResponseEntity.ok(ApiResponse.success("Cliente actualizado", toResponseDTO(clienteService.actualizar(id, request))));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarCliente(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<Void>> eliminarCliente(@PathVariable Long id) {
         log.info("DELETE /api/clientes/{}", id);
         clienteService.eliminar(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.ok(ApiResponse.success("Cliente eliminado exitosamente", null));
     }
 
     private ClienteResponseDTO toResponseDTO(Cliente cliente) {
