@@ -9,6 +9,7 @@ import cl.apipedidos.pedido.entity.TipoDespacho;
 import cl.apipedidos.pedido.service.PedidoService;
 import cl.apipedidos.pedido.dto.ApiResponse;
 import jakarta.validation.Valid;
+import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -39,9 +40,11 @@ public class PedidoController {
     public ResponseEntity<ApiResponse<List<PedidoDTO>>> listarPedidos(
         @RequestParam(required = false) EstadoPedido estado,
         @RequestParam(required = false) TipoDespacho tipo,
-        @RequestParam(required = false) Long clienteId
+        @RequestParam(required = false) Long clienteId,
+        @RequestParam(required = false) LocalDate desde,
+        @RequestParam(required = false) LocalDate hasta
     ) {
-        return ResponseEntity.ok(ApiResponse.success("Listado de pedidos", pedidoService.listarPedidos(estado, tipo, clienteId)));
+        return ResponseEntity.ok(ApiResponse.success("Listado de pedidos", pedidoService.listarPedidos(estado, tipo, clienteId, desde, hasta)));
     }
 
     @GetMapping("/{id}")

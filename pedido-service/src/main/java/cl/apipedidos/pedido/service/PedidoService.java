@@ -15,6 +15,7 @@ import cl.apipedidos.pedido.entity.TipoDespacho;
 import cl.apipedidos.pedido.repository.ItemPedidoRepository;
 import cl.apipedidos.pedido.repository.PedidoRepository;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -96,7 +97,7 @@ public class PedidoService {
     }
 
     @Transactional(readOnly = true)
-    public List<PedidoDTO> listarPedidos(EstadoPedido estado, TipoDespacho tipoDespacho, Long clienteId) {
+    public List<PedidoDTO> listarPedidos(EstadoPedido estado, TipoDespacho tipoDespacho, Long clienteId, LocalDate desde, LocalDate hasta) {
         List<Pedido> pedidos = pedidoRepository.findAll();
 
         if (clienteId != null) {
@@ -109,6 +110,14 @@ public class PedidoService {
 
         if (tipoDespacho != null) {
             pedidos = pedidos.stream().filter(pedido -> tipoDespacho == pedido.getTipoDespacho()).toList();
+        }
+        
+        if (desde != null) {
+            pedidos = pedidos.stream().filter(pedido -> !pedido.getFechaCreacion().toLocalDate().isBefore(desde)).toList();
+        }
+        
+        if (hasta != null) {
+            pedidos = pedidos.stream().filter(pedido -> !pedido.getFechaCreacion().toLocalDate().isAfter(hasta)).toList();
         }
 
         return pedidos.stream().map(this::toDTO).toList();

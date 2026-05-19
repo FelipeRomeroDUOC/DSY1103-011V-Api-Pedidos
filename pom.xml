@@ -25,6 +25,7 @@
         <module>producto-service</module>
         <module>despacho-service</module>
         <module>estado-service</module>
+        <module>metrica-service</module>
     </modules>
 
     <properties>

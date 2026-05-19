@@ -22,4 +22,7 @@ start "despacho-service" cmd /k "mvnw.cmd spring-boot:run -pl despacho-service"
 echo Arrancando estado-service (Puerto 8085)...
 start "estado-service" cmd /k "mvnw.cmd spring-boot:run -pl estado-service"
 
+echo Arrancando metrica-service (Puerto 8087)...
+start "metrica-service" cmd /k "mvnw.cmd spring-boot:run -pl metrica-service"
+
 echo Todos los servicios han sido lanzados.
