@@ -19,7 +19,7 @@ public class MetricaController {
 
     private final MetricaService metricaService;
 
-    @GetMapping("/clientes/{id}")
+    @GetMapping("/clientes/{id:\\d+}")
     public ResponseEntity<ApiResponse<MetricaClienteResponseDTO>> obtenerMetricasCliente(@PathVariable Long id) {
         return ResponseEntity.ok(ApiResponse.success("Métricas del cliente obtenidas correctamente", metricaService.obtenerMetricasCliente(id)));
     }
