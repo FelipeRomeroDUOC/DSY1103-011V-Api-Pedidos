@@ -9,9 +9,9 @@ pause >nul
 
 echo.
 echo [1/6] Creando Clientes (cliente-service :8082)...
-curl -s -X POST http://localhost:8082/api/clientes -H "Content-Type: application/json" -d "{\"nombre\":\"Tech Solutions S.A.\",\"rut\":\"76.543.210-K\",\"email\":\"contacto@techsolutions.cl\",\"telefono\":\"+56912345678\",\"direccion\":\"Av. Apoquindo 4500, Las Condes\"}" >nul
-curl -s -X POST http://localhost:8082/api/clientes -H "Content-Type: application/json" -d "{\"nombre\":\"Juan Perez\",\"rut\":\"15.123.456-7\",\"email\":\"juan.perez@gmail.com\",\"telefono\":\"+56987654321\",\"direccion\":\"Pasaje Los Pinos 123, Maipu\"}" >nul
-curl -s -X POST http://localhost:8082/api/clientes -H "Content-Type: application/json" -d "{\"nombre\":\"Muebles de Lujo SPA\",\"rut\":\"77.111.222-3\",\"email\":\"ventas@muebleslujo.cl\",\"telefono\":\"+56999887766\",\"direccion\":\"Av. Providencia 1000\"}" >nul
+curl -s -X POST http://localhost:8082/api/clientes -H "Content-Type: application/json" -d "{\"nombreCl\":\"Tech Solutions S.A.\",\"rutCl\":76543210,\"divCl\":\"K\",\"emailCl\":\"contacto@techsolutions.cl\",\"telefonoCl\":\"+56912345678\",\"direccionCl\":\"Av. Apoquindo 4500\",\"comuna\":\"Las Condes\"}" >nul
+curl -s -X POST http://localhost:8082/api/clientes -H "Content-Type: application/json" -d "{\"nombreCl\":\"Juan Perez\",\"rutCl\":15123456,\"divCl\":\"7\",\"emailCl\":\"juan.perez@gmail.com\",\"telefonoCl\":\"+56987654321\",\"direccionCl\":\"Pasaje Los Pinos 123\",\"comuna\":\"Maipu\"}" >nul
+curl -s -X POST http://localhost:8082/api/clientes -H "Content-Type: application/json" -d "{\"nombreCl\":\"Muebles de Lujo SPA\",\"rutCl\":77111222,\"divCl\":\"3\",\"emailCl\":\"ventas@muebleslujo.cl\",\"telefonoCl\":\"+56999887766\",\"direccionCl\":\"Av. Providencia 1000\",\"comuna\":\"Providencia\"}" >nul
 echo OK.
 
 echo.
