@@ -151,7 +151,7 @@ public class MetricaServiceImpl implements MetricaService {
         try {
             ApiResponse<ClienteResponseDTO> response = clienteFeignClient.obtenerCliente(clienteId);
             if (response != null && response.data() != null) {
-                return response.data().getNombre();
+                return response.data().getNombreCl();
             }
         } catch (Exception e) {
             if (e.getMessage().contains("404")) {
@@ -166,7 +166,7 @@ public class MetricaServiceImpl implements MetricaService {
         try {
             ApiResponse<ClienteResponseDTO> response = clienteFeignClient.obtenerCliente(clienteId);
             if (response != null && response.data() != null) {
-                return response.data().getNombre();
+                return response.data().getNombreCl();
             }
         } catch (Exception e) {
             log.warn("Fallo tolerado al obtener clienteId={} para ranking: {}", clienteId, e.getMessage());
