@@ -24,6 +24,7 @@ Api_Pedidos/
 ├── producto-service/          ← Microservicio de Catálogo de Productos (Puerto 8083)
 ├── pedido-service/            ← Microservicio de Pedidos (Puerto 8081)
 ├── fabricacion-service/       ← Microservicio de Manufactura (Puerto 8086)
+├── despacho-service/          ← Microservicio de Despachos (Puerto 8084)
 └── docs/                      ← Documentación de la API
 ```
 
@@ -34,6 +35,7 @@ Los servicios están completamente desacoplados a nivel de código y se comunica
 - `fabricacion-service (8086)` ──Feign──► `pedido-service (8081)`
 - `pedido-service (8081)` ──Feign──► `cliente-service (8082)` (Valida cliente)
 - `pedido-service (8081)` ──Feign──► `producto-service (8083)` (Valida catálogo y obtiene precio)
+- `despacho-service (8084)` ──Feign──► `pedido-service (8081)` (Verifica estado LISTO)
 
 ## 🌐 Microservicios y Endpoints
 
@@ -81,6 +83,15 @@ Orquesta el ensamblaje de los pedidos de manufactura.
 - `PATCH /api/fabricacion/{id}/estado`: Cambia el estado de una orden (ej. a `TERMINADO`) y notifica automáticamente al `pedido-service`.
 - `GET /api/fabricacion/ping`: Healthcheck.
 
+### 5. `despacho-service` (http://localhost:8084)
+Gestiona el envío o retiro de los pedidos terminados.
+
+- `POST /api/despachos`: Registra un despacho validando que el pedido esté `LISTO`.
+- `GET /api/despachos`: Lista todos los despachos (filtra por `tipo=REGION`, etc.).
+- `GET /api/despachos/{pedidoId}`: Obtiene el despacho asociado a un pedido.
+- `PUT /api/despachos/{id}`: Actualiza transportista o tracking.
+- `GET /api/despachos/ping`: Healthcheck.
+
 ## ▶️ Cómo ejecutar el proyecto
 
 Para correr la plataforma en desarrollo local, debes levantar los microservicios en terminales separadas.
@@ -107,6 +118,11 @@ Desde la raíz del proyecto (`Api_Pedidos/`), ejecuta:
 ./mvnw spring-boot:run -pl fabricacion-service
 ```
 
+**Terminal 5 (Despachos):**
+```bash
+./mvnw spring-boot:run -pl despacho-service
+```
+
 O si prefieres utilizar el script de conveniencia para Windows:
 ```cmd
 start-all.bat
@@ -119,6 +135,7 @@ Cada microservicio mantiene su propia base de datos independiente (Base de Datos
 - `producto-service/data/producto_service.mv.db`
 - `pedido-service/data/pedido_service.mv.db`
 - `fabricacion-service/data/fabricacion_service.mv.db`
+- `despacho-service/data/despacho_service.mv.db`
 
 La configuración de H2 se realiza mediante los archivos `application-h2.properties` ubicados en el bloque `src/main/resources/` de cada módulo.
 
@@ -155,12 +172,14 @@ A continuación, la secuencia de flujo completo a través de los microservicios:
 **POST** `http://localhost:8081/api/pedidos`
 ```json
 {
+  "numeroPedido": "PED-101",
   "clienteId": 1,
-  "tipoDespacho": "DOMICILIO",
+  "tipoDespacho": "RM",
   "items": [
     {
       "productoId": 1,
-      "cantidad": 2
+      "cantidad": 2,
+      "precioUnitario": 149990.0
     }
   ]
 }
@@ -171,7 +190,7 @@ A continuación, la secuencia de flujo completo a través de los microservicios:
 **POST** `http://localhost:8086/api/fabricacion`
 ```json
 {
-  "pedidoId": 1,
+  "numeroPedido": 1,
   "usuarioResponsable": "Operador 1"
 }
 ```
@@ -181,10 +200,21 @@ A continuación, la secuencia de flujo completo a través de los microservicios:
 **PATCH** `http://localhost:8086/api/fabricacion/1/estado`
 ```json
 {
-  "estado": "TERMINADO"
+  "nuevoEstado": "TERMINADO"
 }
 ```
 *(Notifica a `pedido-service` vía HTTP PATCH que debe actualizar el estado del pedido a `LISTO`)*
+
+### 6. Registrar Despacho (`despacho-service`)
+**POST** `http://localhost:8084/api/despachos`
+```json
+{
+  "pedidoId": 1,
+  "tipoDespacho": "RM",
+  "fechaDespacho": "2026-05-20"
+}
+```
+*(Requiere que el pedido esté en estado `LISTO` previo en `pedido-service`)*
 
 ## 🧪 Notas Técnicas de la Refactorización
 
