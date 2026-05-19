@@ -26,6 +26,7 @@
         <module>despacho-service</module>
         <module>estado-service</module>
         <module>metrica-service</module>
+        <module>transportista-service</module>
     </modules>
 
     <properties>

@@ -12,6 +12,7 @@ public record DespachoRequestDTO(
         TipoDespacho tipoDespacho,
         
         String transportista,
+        Long transportistaId,
         LocalDate fechaDespacho,
         String trackingCode
 ) {}

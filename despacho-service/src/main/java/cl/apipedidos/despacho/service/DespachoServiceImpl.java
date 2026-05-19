@@ -2,6 +2,7 @@ package cl.apipedidos.despacho.service;
 
 import cl.apipedidos.despacho.client.PedidoFeignClient;
 import cl.apipedidos.despacho.client.PedidoResponseDTO;
+import cl.apipedidos.despacho.client.TransportistaFeignClient;
 import cl.apipedidos.despacho.dto.ApiResponse;
 import cl.apipedidos.despacho.dto.DespachoRequestDTO;
 import cl.apipedidos.despacho.dto.DespachoResponseDTO;
@@ -25,6 +26,7 @@ public class DespachoServiceImpl implements DespachoService {
 
     private final DespachoRepository despachoRepository;
     private final PedidoFeignClient pedidoClient;
+    private final TransportistaFeignClient transportistaClient;
 
     @Override
     @Transactional
@@ -35,9 +37,21 @@ public class DespachoServiceImpl implements DespachoService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "El pedido ya tiene un despacho registrado");
         }
 
-        if (request.tipoDespacho() == TipoDespacho.REGION && 
-            (request.transportista() == null || request.transportista().isBlank())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El transportista es obligatorio para despachos a REGION");
+        String transportistaFinal = request.transportista();
+
+        if (request.tipoDespacho() == TipoDespacho.REGION) {
+            if (request.transportistaId() == null) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El transportistaId es obligatorio para despachos a REGION");
+            }
+            try {
+                ApiResponse<TransportistaFeignClient.TransportistaResponseDTO> transResp = 
+                    transportistaClient.obtenerTransportista(request.transportistaId());
+                transportistaFinal = transResp.data().getNombre();
+            } catch (feign.FeignException.NotFound e) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Transportista inválido o inactivo");
+            } catch (feign.FeignException e) {
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al comunicar con transportista-service");
+            }
         }
 
         try {
@@ -57,7 +71,7 @@ public class DespachoServiceImpl implements DespachoService {
         Despacho despacho = new Despacho();
         despacho.setPedidoId(request.pedidoId());
         despacho.setTipoDespacho(request.tipoDespacho());
-        despacho.setTransportista(request.transportista());
+        despacho.setTransportista(transportistaFinal);
         despacho.setFechaDespacho(request.fechaDespacho());
         despacho.setTrackingCode(request.trackingCode());
 

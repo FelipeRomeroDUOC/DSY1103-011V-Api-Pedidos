@@ -10,5 +10,7 @@ cl\apipedidos\despacho\service\DespachoService.class
 cl\apipedidos\config\ApiExceptionHandler.class
 cl\apipedidos\despacho\service\DespachoServiceImpl.class
 cl\apipedidos\despacho\client\PedidoFeignClient.class
+cl\apipedidos\despacho\client\TransportistaFeignClient$TransportistaResponseDTO.class
 cl\apipedidos\despacho\dto\DespachoUpdateDTO.class
+cl\apipedidos\despacho\client\TransportistaFeignClient.class
 cl\apipedidos\despacho\dto\DespachoResponseDTO.class
