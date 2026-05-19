@@ -6,7 +6,7 @@
 ┌────────────────────────────────────────────────┐
 │                   REST Layer                    │
 │              ProductoController                 │
-│  (POST, GET, PUT, DELETE /api/productos)        │
+│  (POST, GET, PUT, DELETE, PATCH /api/productos) │
 ├────────────────────────────────────────────────┤
 │                 Service Layer                   │
 │  ProductoService (interface)                    │
@@ -30,7 +30,7 @@ cl.apipedidos/
 │   └── ApiExceptionHandler.java            ← @RestControllerAdvice global
 └── producto/
     ├── controller/
-    │   └── ProductoController.java         ← 6 endpoints REST
+    │   └── ProductoController.java         ← 7 endpoints REST
     ├── service/
     │   ├── ProductoService.java            ← Contrato (interfaz)
     │   └── ProductoServiceImpl.java        ← Lógica de negocio
