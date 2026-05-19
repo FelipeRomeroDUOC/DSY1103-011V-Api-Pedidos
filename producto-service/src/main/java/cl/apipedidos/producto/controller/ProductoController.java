@@ -12,11 +12,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -37,9 +39,10 @@ public class ProductoController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<ProductoResponseDTO>>> listar() {
-        log.info("GET /api/productos");
-        List<ProductoResponseDTO> productos = productoService.listarActivos();
+    public ResponseEntity<ApiResponse<List<ProductoResponseDTO>>> listar(
+            @RequestParam(required = false, defaultValue = "false") boolean incluirInactivos) {
+        log.info("GET /api/productos?incluirInactivos={}", incluirInactivos);
+        List<ProductoResponseDTO> productos = productoService.listar(incluirInactivos);
         return ResponseEntity.ok(ApiResponse.success("Productos obtenidos exitosamente", productos));
     }
 
@@ -62,6 +65,13 @@ public class ProductoController {
         log.info("DELETE /api/productos/{}", id);
         productoService.desactivar(id);
         return ResponseEntity.ok(ApiResponse.success("Producto desactivado exitosamente", null));
+    }
+
+    @PatchMapping("/{id}/activar")
+    public ResponseEntity<ApiResponse<Void>> activar(@PathVariable Long id) {
+        log.info("PATCH /api/productos/{}/activar", id);
+        productoService.activar(id);
+        return ResponseEntity.ok(ApiResponse.success("Producto activado exitosamente", null));
     }
 
     @GetMapping("/ping")

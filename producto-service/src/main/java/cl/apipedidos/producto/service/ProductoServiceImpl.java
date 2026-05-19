@@ -42,8 +42,12 @@ public class ProductoServiceImpl implements ProductoService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ProductoResponseDTO> listarActivos() {
-        return productoRepository.findByActivoTrue().stream()
+    public List<ProductoResponseDTO> listar(boolean incluirInactivos) {
+        List<Producto> productos = incluirInactivos 
+                ? productoRepository.findAll() 
+                : productoRepository.findByActivoTrue();
+                
+        return productos.stream()
                 .map(this::toDTO)
                 .toList();
     }
@@ -89,6 +93,23 @@ public class ProductoServiceImpl implements ProductoService {
         producto.setActivo(false);
         productoRepository.save(producto);
         log.info("Producto desactivado id={}", id);
+    }
+
+    @Override
+    @Transactional
+    public void activar(Long id) {
+        log.info("Activando producto id={}", id);
+
+        Producto producto = productoRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Producto no encontrado: " + id));
+
+        if (producto.isActivo()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El producto ya se encuentra activo");
+        }
+
+        producto.setActivo(true);
+        productoRepository.save(producto);
+        log.info("Producto activado id={}", id);
     }
 
     private ProductoResponseDTO toDTO(Producto producto) {

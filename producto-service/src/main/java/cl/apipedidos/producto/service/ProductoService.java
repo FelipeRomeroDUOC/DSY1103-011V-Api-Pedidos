@@ -8,11 +8,13 @@ public interface ProductoService {
 
     ProductoResponseDTO crear(ProductoRequestDTO request);
 
-    List<ProductoResponseDTO> listarActivos();
+    List<ProductoResponseDTO> listar(boolean incluirInactivos);
 
     ProductoResponseDTO obtenerPorId(Long id);
 
     ProductoResponseDTO actualizar(Long id, ProductoRequestDTO request);
 
     void desactivar(Long id);
+
+    void activar(Long id);
 }

@@ -76,12 +76,16 @@ curl -X POST http://localhost:8083/api/productos \
 
 ---
 
-### 2. Listar Productos Activos — `GET /api/productos`
+### 2. Listar Productos — `GET /api/productos`
 
-Retorna todos los productos con `activo = true`.
+Por defecto, retorna solo los productos con `activo = true`. Se puede incluir los inactivos mediante query param.
+
+| Parámetro | Tipo | Descripción |
+|---|---|---|
+| `incluirInactivos` | `boolean` | `true` para incluir productos con `activo = false` (default: `false`) |
 
 ```bash
-curl http://localhost:8083/api/productos
+curl "http://localhost:8083/api/productos?incluirInactivos=true"
 ```
 
 **200 OK:** `ApiResponse<List<ProductoResponseDTO>>`
@@ -131,7 +135,19 @@ curl -X DELETE http://localhost:8083/api/productos/1
 
 ---
 
-### 6. Healthcheck — `GET /api/productos/ping`
+### 6. Reactivar Producto — `PATCH /api/productos/{id}/activar`
+
+Reactiva un producto que previamente fue desactivado (`activo = true`).
+
+```bash
+curl -X PATCH http://localhost:8083/api/productos/1/activar
+```
+
+**200 OK:** `ApiResponse<Void>`. **Errores:** `404` (no encontrado), `400` (ya está activo)
+
+---
+
+### 7. Healthcheck — `GET /api/productos/ping`
 
 ```bash
 curl http://localhost:8083/api/productos/ping
