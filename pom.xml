@@ -22,6 +22,7 @@
         <module>cliente-service</module>
         <module>pedido-service</module>
         <module>fabricacion-service</module>
+        <module>producto-service</module>
     </modules>
 
     <properties>

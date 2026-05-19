@@ -13,4 +13,7 @@ start "Pedido Service" cmd /k ".\mvnw.cmd spring-boot:run -pl pedido-service"
 echo Levantando Fabricacion Service (8086)...
 start "Fabricacion Service" cmd /k ".\mvnw.cmd spring-boot:run -pl fabricacion-service"
 
+echo Levantando Producto Service (8083)...
+start "Producto Service" cmd /k ".\mvnw.cmd spring-boot:run -pl producto-service"
+
 echo Todos los servicios han sido lanzados.

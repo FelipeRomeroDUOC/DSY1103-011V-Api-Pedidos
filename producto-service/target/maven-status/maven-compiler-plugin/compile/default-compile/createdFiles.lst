@@ -1,0 +1,11 @@
+cl\apipedidos\config\ApiExceptionHandler$ApiErrorResponse.class
+cl\apipedidos\ProductoServiceApplication.class
+cl\apipedidos\producto\dto\ApiResponse.class
+cl\apipedidos\producto\dto\ProductoResponseDTO.class
+cl\apipedidos\config\ApiExceptionHandler.class
+cl\apipedidos\producto\dto\ProductoRequestDTO.class
+cl\apipedidos\producto\repository\ProductoRepository.class
+cl\apipedidos\producto\controller\ProductoController.class
+cl\apipedidos\producto\service\ProductoServiceImpl.class
+cl\apipedidos\producto\service\ProductoService.class
+cl\apipedidos\producto\entity\Producto.class
