@@ -46,7 +46,8 @@ curl -s -X PATCH http://localhost:8086/api/fabricacion/1/estado -H "Content-Type
 
 :: Iniciar fabricacion para el Pedido 2
 curl -s -X POST http://localhost:8086/api/fabricacion -H "Content-Type: application/json" -d "{\"numeroPedido\":2,\"usuarioResponsable\":\"Operador Luis\"}" >nul
-:: Este se queda EN_PROCESO
+:: Terminar fabricacion Pedido 2 (Pasa a LISTO)
+curl -s -X PATCH http://localhost:8086/api/fabricacion/2/estado -H "Content-Type: application/json" -d "{\"nuevoEstado\":\"TERMINADO\"}" >nul
 
 :: Iniciar fabricacion para el Pedido 3
 curl -s -X POST http://localhost:8086/api/fabricacion -H "Content-Type: application/json" -d "{\"numeroPedido\":3,\"usuarioResponsable\":\"Operador Pedro\"}" >nul
@@ -58,6 +59,9 @@ echo.
 echo [5/6] Despachando pedidos LISTOS (despacho-service :8084)...
 :: Despachamos Pedido 1 (A RM)
 curl -s -X POST http://localhost:8084/api/despachos -H "Content-Type: application/json" -d "{\"pedidoId\":1,\"tipoDespacho\":\"RM\",\"fechaDespacho\":\"2026-05-20\"}" >nul
+
+:: Despachamos Pedido 2 (A REGION)
+curl -s -X POST http://localhost:8084/api/despachos -H "Content-Type: application/json" -d "{\"pedidoId\":2,\"tipoDespacho\":\"REGION\",\"transportistaId\":1,\"fechaDespacho\":\"2026-05-21\"}" >nul
 
 :: Despachamos Pedido 3 (RETIRO)
 curl -s -X POST http://localhost:8084/api/despachos -H "Content-Type: application/json" -d "{\"pedidoId\":3,\"tipoDespacho\":\"RETIRO\",\"fechaDespacho\":\"2026-05-22\"}" >nul
