@@ -4,7 +4,6 @@ import cl.apipedidos.http.dto.ClienteCreateRequestDTO;
 import cl.apipedidos.http.dto.ClienteResponseDTO;
 import cl.apipedidos.http.dto.ClienteUpdateRequestDTO;
 import cl.apipedidos.http.dto.ApiResponse;
-import java.util.List;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,3 +31,4 @@ public interface ClienteFeignClient {
     @DeleteMapping("/api/clientes/{id}")
     ApiResponse<Void> eliminarCliente(@PathVariable("id") Long id);
 }
+

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.server.ResponseStatusException;
 
+@SuppressWarnings("null")
 @RestControllerAdvice
 @Slf4j
 public class ApiExceptionHandler {
@@ -74,3 +75,4 @@ public class ApiExceptionHandler {
         return fieldError.getField() + " es inválido";
     }
 }
+

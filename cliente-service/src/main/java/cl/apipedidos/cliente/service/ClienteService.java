@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+@SuppressWarnings("null")
 @Service
 @Slf4j
 @Transactional
@@ -188,3 +189,4 @@ public class ClienteService {
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente no encontrado"));
     }
 }
+

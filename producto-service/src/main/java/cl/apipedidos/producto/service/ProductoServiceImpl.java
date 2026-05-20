@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+@SuppressWarnings("null")
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -123,3 +124,4 @@ public class ProductoServiceImpl implements ProductoService {
         );
     }
 }
+

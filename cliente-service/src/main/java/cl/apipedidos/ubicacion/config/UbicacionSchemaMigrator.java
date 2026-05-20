@@ -15,6 +15,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+@SuppressWarnings("null")
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @Transactional

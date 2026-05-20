@@ -13,6 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
+@SuppressWarnings("null")
 @Service
 @RequiredArgsConstructor
 public class TransportistaServiceImpl implements TransportistaService {
@@ -90,3 +91,4 @@ public class TransportistaServiceImpl implements TransportistaService {
         return dto;
     }
 }
+

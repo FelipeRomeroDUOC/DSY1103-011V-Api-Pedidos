@@ -19,6 +19,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("null")
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -174,3 +175,4 @@ public class MetricaServiceImpl implements MetricaService {
         return "Cliente " + clienteId;
     }
 }
+

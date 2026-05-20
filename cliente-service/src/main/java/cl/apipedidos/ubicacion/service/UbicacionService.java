@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+@SuppressWarnings("null")
 @Service
 @Transactional(readOnly = true)
 public class UbicacionService {

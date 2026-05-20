@@ -19,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
+@SuppressWarnings("null")
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -128,3 +129,4 @@ public class DespachoServiceImpl implements DespachoService {
         );
     }
 }
+

@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
+@SuppressWarnings("null")
 @Service
 @RequiredArgsConstructor
 public class OrdenFabricacionService {
@@ -110,3 +111,4 @@ public class OrdenFabricacionService {
         return resp;
     }
 }
+

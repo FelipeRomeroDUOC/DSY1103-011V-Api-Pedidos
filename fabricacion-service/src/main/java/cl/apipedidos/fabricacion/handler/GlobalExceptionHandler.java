@@ -3,8 +3,6 @@ package cl.apipedidos.fabricacion.handler;
 import cl.apipedidos.fabricacion.dto.ApiResponse;
 import cl.apipedidos.fabricacion.exception.FabricacionException;
 import cl.apipedidos.fabricacion.exception.PedidoNoEncontradoException;
-import jakarta.validation.ConstraintViolationException;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -15,6 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.stream.Collectors;
 
+@SuppressWarnings("null")
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -51,3 +50,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.error("Error interno: " + ex.getMessage()));
     }
 }
+
+
+

@@ -12,6 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
+@SuppressWarnings("null")
 @Service
 @RequiredArgsConstructor
 public class UsuarioServiceImpl implements UsuarioService {
@@ -81,3 +82,4 @@ public class UsuarioServiceImpl implements UsuarioService {
             .build();
     }
 }
+

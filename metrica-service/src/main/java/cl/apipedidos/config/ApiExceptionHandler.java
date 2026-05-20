@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-import java.time.LocalDateTime;
 
+@SuppressWarnings("null")
 @RestControllerAdvice
 public class ApiExceptionHandler {
 
@@ -37,3 +37,5 @@ public class ApiExceptionHandler {
                 .body(ApiResponse.error("Error interno del servidor: " + ex.getMessage()));
     }
 }
+
+
