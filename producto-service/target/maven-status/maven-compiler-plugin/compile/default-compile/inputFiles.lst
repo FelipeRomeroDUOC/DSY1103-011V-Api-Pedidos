@@ -1,4 +1,7 @@
 C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\producto-service\src\main\java\cl\apipedidos\config\ApiExceptionHandler.java
+C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\producto-service\src\main\java\cl\apipedidos\config\JwtAuthFilter.java
+C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\producto-service\src\main\java\cl\apipedidos\config\JwtUtil.java
+C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\producto-service\src\main\java\cl\apipedidos\config\SecurityConfig.java
 C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\producto-service\src\main\java\cl\apipedidos\producto\controller\ProductoController.java
 C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\producto-service\src\main\java\cl\apipedidos\producto\dto\ApiResponse.java
 C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\producto-service\src\main\java\cl\apipedidos\producto\dto\ProductoRequestDTO.java

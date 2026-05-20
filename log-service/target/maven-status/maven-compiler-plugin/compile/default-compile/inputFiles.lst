@@ -1,0 +1,12 @@
+C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\log-service\src\main\java\cl\apipedidos\config\JwtAuthFilter.java
+C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\log-service\src\main\java\cl\apipedidos\config\JwtUtil.java
+C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\log-service\src\main\java\cl\apipedidos\config\SecurityConfig.java
+C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\log-service\src\main\java\cl\apipedidos\logservice\config\ApiExceptionHandler.java
+C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\log-service\src\main\java\cl\apipedidos\logservice\controller\LogController.java
+C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\log-service\src\main\java\cl\apipedidos\logservice\dto\ApiResponse.java
+C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\log-service\src\main\java\cl\apipedidos\logservice\dto\LogRequestDTO.java
+C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\log-service\src\main\java\cl\apipedidos\logservice\entity\LogEntrada.java
+C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\log-service\src\main\java\cl\apipedidos\logservice\LogServiceApplication.java
+C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\log-service\src\main\java\cl\apipedidos\logservice\repository\LogRepository.java
+C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\log-service\src\main\java\cl\apipedidos\logservice\service\LogService.java
+C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\log-service\src\main\java\cl\apipedidos\logservice\service\LogServiceImpl.java

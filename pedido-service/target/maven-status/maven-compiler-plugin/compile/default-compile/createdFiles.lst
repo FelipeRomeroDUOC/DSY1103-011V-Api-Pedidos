@@ -2,7 +2,9 @@ cl\apipedidos\http\dto\ClienteUpdateRequestDTO.class
 cl\apipedidos\pedido\controller\PedidoController.class
 cl\apipedidos\pedido\repository\PedidoRepository.class
 cl\apipedidos\pedido\client\EstadoFeignClient.class
+cl\apipedidos\config\FeignJwtInterceptor.class
 cl\apipedidos\pedido\client\CambioEstadoRequestDTO.class
+cl\apipedidos\config\SecurityConfig.class
 cl\apipedidos\pedido\entity\ItemPedido.class
 cl\apipedidos\pedido\entity\TipoDespacho.class
 cl\apipedidos\pedido\dto\ApiResponse.class
@@ -12,7 +14,9 @@ cl\apipedidos\pedido\repository\ItemPedidoRepository.class
 cl\apipedidos\http\client\feign\FeignErrorDecoder.class
 cl\apipedidos\http\dto\ApiErrorResponse.class
 cl\apipedidos\pedido\entity\EstadoPedido.class
+cl\apipedidos\config\JwtAuthFilter.class
 cl\apipedidos\http\dto\ClienteCreateRequestDTO.class
+cl\apipedidos\config\JwtUtil.class
 cl\apipedidos\http\client\feign\ClienteFeignClient.class
 cl\apipedidos\pedido\client\ClienteServiceClient.class
 cl\apipedidos\pedido\dto\CreateItemRequest.class

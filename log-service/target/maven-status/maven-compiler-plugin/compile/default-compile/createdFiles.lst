@@ -1,0 +1,14 @@
+cl\apipedidos\logservice\config\ApiExceptionHandler.class
+cl\apipedidos\logservice\dto\ApiResponse.class
+cl\apipedidos\logservice\entity\LogEntrada.class
+cl\apipedidos\config\SecurityConfig.class
+cl\apipedidos\logservice\dto\LogRequestDTO$LogRequestDTOBuilder.class
+cl\apipedidos\logservice\dto\LogRequestDTO.class
+cl\apipedidos\logservice\service\LogService.class
+cl\apipedidos\logservice\dto\ApiResponse$ApiResponseBuilder.class
+cl\apipedidos\logservice\LogServiceApplication.class
+cl\apipedidos\logservice\repository\LogRepository.class
+cl\apipedidos\config\JwtAuthFilter.class
+cl\apipedidos\logservice\controller\LogController.class
+cl\apipedidos\logservice\service\LogServiceImpl.class
+cl\apipedidos\config\JwtUtil.class

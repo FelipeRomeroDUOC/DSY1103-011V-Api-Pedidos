@@ -1,5 +1,7 @@
 cl\apipedidos\metrica\service\MetricaService.class
+cl\apipedidos\config\FeignJwtInterceptor.class
 cl\apipedidos\metrica\client\ClienteFeignClient.class
+cl\apipedidos\config\SecurityConfig.class
 cl\apipedidos\metrica\dto\ResumenVentasResponseDTO.class
 cl\apipedidos\metrica\dto\ApiResponse.class
 cl\apipedidos\metrica\entity\MetricaProducto.class
@@ -10,9 +12,11 @@ cl\apipedidos\metrica\client\PedidoFeignClient.class
 cl\apipedidos\metrica\dto\ClienteResponseDTO.class
 cl\apipedidos\metrica\dto\MetricaClienteResponseDTO.class
 cl\apipedidos\metrica\repository\MetricaClienteRepository.class
+cl\apipedidos\config\JwtAuthFilter.class
 cl\apipedidos\metrica\dto\ItemPedidoDTO.class
 cl\apipedidos\metrica\controller\MetricaController.class
 cl\apipedidos\metrica\dto\MetricaProductoResponseDTO.class
 cl\apipedidos\metrica\dto\PedidoResponseDTO.class
 cl\apipedidos\metrica\entity\MetricaCliente.class
+cl\apipedidos\config\JwtUtil.class
 cl\apipedidos\metrica\repository\MetricaProductoRepository.class

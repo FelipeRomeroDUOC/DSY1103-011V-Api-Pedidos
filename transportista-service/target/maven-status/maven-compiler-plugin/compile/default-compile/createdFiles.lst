@@ -1,11 +1,14 @@
 cl\apipedidos\transportistaservice\controller\TransportistaController.class
 cl\apipedidos\transportistaservice\model\Transportista.class
 cl\apipedidos\transportistaservice\service\TransportistaServiceImpl.class
+cl\apipedidos\config\SecurityConfig.class
 cl\apipedidos\transportistaservice\repository\TransportistaRepository.class
 cl\apipedidos\transportistaservice\response\ApiResponse.class
 cl\apipedidos\transportistaservice\dto\TransportistaResponseDTO.class
 cl\apipedidos\transportistaservice\dto\TransportistaRequestDTO.class
 cl\apipedidos\transportistaservice\dto\TransportistaUpdateDTO.class
 cl\apipedidos\transportistaservice\TransportistaServiceApplication.class
+cl\apipedidos\config\JwtAuthFilter.class
+cl\apipedidos\config\JwtUtil.class
 cl\apipedidos\transportistaservice\config\ApiExceptionHandler.class
 cl\apipedidos\transportistaservice\service\TransportistaService.class

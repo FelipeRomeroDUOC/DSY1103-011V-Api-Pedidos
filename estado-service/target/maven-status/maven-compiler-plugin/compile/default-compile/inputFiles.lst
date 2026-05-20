@@ -1,4 +1,7 @@
 C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\estado-service\src\main\java\cl\apipedidos\config\ApiExceptionHandler.java
+C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\estado-service\src\main\java\cl\apipedidos\config\JwtAuthFilter.java
+C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\estado-service\src\main\java\cl\apipedidos\config\JwtUtil.java
+C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\estado-service\src\main\java\cl\apipedidos\config\SecurityConfig.java
 C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\estado-service\src\main\java\cl\apipedidos\estado\controller\EstadoController.java
 C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\estado-service\src\main\java\cl\apipedidos\estado\dto\ApiResponse.java
 C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\estado-service\src\main\java\cl\apipedidos\estado\dto\CambioEstadoRequestDTO.java

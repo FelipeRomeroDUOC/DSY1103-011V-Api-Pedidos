@@ -1,0 +1,156 @@
+{
+  "info": {
+    "name": "Api Pedidos - Pruebas Locales",
+    "description": "Colección para probar la autenticación JWT y los microservicios protegidos.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "jwt_token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Seguridad (auth-service)",
+      "item": [
+        {
+          "name": "Login (Generar Token)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if(jsonData && jsonData.data && jsonData.data.token) {",
+                  "    pm.collectionVariables.set(\"jwt_token\", jsonData.data.token);",
+                  "    console.log(\"Token guardado en variable jwt_token\");",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"admin@empresa.com\",\r\n  \"password\": \"pass123\"\r\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8090/api/auth/login",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8090",
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Ping Auth (Publico)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8090/api/auth/ping",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8090",
+              "path": ["api", "auth", "ping"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Microservicios Protegidos",
+      "item": [
+        {
+          "name": "Listar Clientes (cliente-service)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8082/api/clientes",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8082",
+              "path": ["api", "clientes"]
+            }
+          }
+        },
+        {
+          "name": "Crear Cliente (cliente-service)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nombreCl\": \"Tech Solutions S.A.\",\r\n    \"rutCl\": 76543210,\r\n    \"divCl\": \"K\",\r\n    \"emailCl\": \"contacto@techsolutions.cl\",\r\n    \"telefonoCl\": \"+56912345678\",\r\n    \"direccionCl\": \"Av. Apoquindo 4500\",\r\n    \"comuna\": \"Las Condes\"\r\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8082/api/clientes",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8082",
+              "path": ["api", "clientes"]
+            }
+          }
+        },
+        {
+          "name": "Listar Pedidos (pedido-service)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8081/api/pedidos",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8081",
+              "path": ["api", "pedidos"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

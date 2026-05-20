@@ -20,6 +20,7 @@ El proyecto pasó de ser un monolito a una arquitectura multi-módulo real:
 ```text
 Api_Pedidos/
 ├── pom.xml                    ← POM padre (gestión centralizada de dependencias)
+├── auth-service/              ← Microservicio de Autenticación y Autorización (Puerto 8090)
 ├── cliente-service/           ← Microservicio de Clientes y Ubicaciones (Puerto 8082)
 ├── producto-service/          ← Microservicio de Catálogo de Productos (Puerto 8083)
 ├── pedido-service/            ← Microservicio de Pedidos (Puerto 8081)
@@ -47,7 +48,18 @@ Los servicios están completamente desacoplados a nivel de código y se comunica
 
 ## 🌐 Microservicios y Endpoints
 
-### 1. `cliente-service` (http://localhost:8082)
+### 1. `auth-service` (http://localhost:8090)
+Gestiona la autenticación, autorización y emisión de tokens JWT para todo el ecosistema.
+
+**Seguridad:**
+- `POST /api/auth/login`: Autentica un usuario y retorna un JWT.
+- `GET /api/auth/ping`: Healthcheck.
+
+**Gestión de Usuarios (Requiere ADMIN):**
+- `GET /api/auth/usuarios`: Lista todos los usuarios.
+- `POST /api/auth/usuarios`: Crea un nuevo usuario.
+
+### 2. `cliente-service` (http://localhost:8082)
 Gestiona el catálogo completo de clientes y el mapa de ubicaciones (Regiones, Provincias y Comunas de Chile).
 
 **Clientes:**
@@ -206,6 +218,16 @@ La configuración de H2 se realiza mediante los archivos `application-h2.propert
 ## 🧭 Ejemplos de uso (Postman)
 
 A continuación, la secuencia de flujo completo a través de los microservicios:
+
+### 0. Obtener Token de Acceso (`auth-service`)
+**POST** `http://localhost:8090/api/auth/login`
+```json
+{
+  "email": "admin@empresa.com",
+  "password": "pass123"
+}
+```
+*(Copia el token JWT de la respuesta y envíalo como `Authorization: Bearer <TOKEN>` en los siguientes pasos)*
 
 ### 1. Crear un Cliente (`cliente-service`)
 **POST** `http://localhost:8082/api/clientes`

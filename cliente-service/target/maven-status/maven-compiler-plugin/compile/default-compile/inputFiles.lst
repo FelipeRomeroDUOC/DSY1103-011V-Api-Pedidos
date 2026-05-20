@@ -8,6 +8,9 @@ C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\cliente-service\src\main\
 C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\cliente-service\src\main\java\cl\apipedidos\cliente\service\ClienteService.java
 C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\cliente-service\src\main\java\cl\apipedidos\ClienteServiceApplication.java
 C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\cliente-service\src\main\java\cl\apipedidos\config\ApiExceptionHandler.java
+C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\cliente-service\src\main\java\cl\apipedidos\config\JwtAuthFilter.java
+C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\cliente-service\src\main\java\cl\apipedidos\config\JwtUtil.java
+C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\cliente-service\src\main\java\cl\apipedidos\config\SecurityConfig.java
 C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\cliente-service\src\main\java\cl\apipedidos\ubicacion\config\ProvinciaCatalog.java
 C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\cliente-service\src\main\java\cl\apipedidos\ubicacion\config\UbicacionDataLoader.java
 C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\cliente-service\src\main\java\cl\apipedidos\ubicacion\config\UbicacionSchemaMigrator.java

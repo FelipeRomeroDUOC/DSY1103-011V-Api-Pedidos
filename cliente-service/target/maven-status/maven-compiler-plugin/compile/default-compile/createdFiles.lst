@@ -6,11 +6,14 @@ cl\apipedidos\ubicacion\config\ProvinciaCatalog.class
 cl\apipedidos\config\ApiExceptionHandler$ApiErrorResponse.class
 cl\apipedidos\ubicacion\repository\ComunaRepository.class
 cl\apipedidos\cliente\service\ClienteService.class
+cl\apipedidos\config\SecurityConfig.class
 cl\apipedidos\ubicacion\dto\ProvinciaResponseDTO.class
 cl\apipedidos\ubicacion\entity\Comuna.class
 cl\apipedidos\cliente\entity\Cliente.class
 cl\apipedidos\ubicacion\service\UbicacionService.class
+cl\apipedidos\config\JwtAuthFilter.class
 cl\apipedidos\ubicacion\config\UbicacionSchemaMigrator.class
+cl\apipedidos\config\JwtUtil.class
 cl\apipedidos\ubicacion\entity\Region.class
 cl\apipedidos\ubicacion\repository\ProvinciaRepository.class
 cl\apipedidos\cliente\dto\ClienteUpdateRequestDTO.class

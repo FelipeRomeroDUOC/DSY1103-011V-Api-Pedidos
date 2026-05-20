@@ -31,4 +31,7 @@ start "transportista-service" cmd /k "mvnw.cmd spring-boot:run -pl transportista
 echo Arrancando log-service (Puerto 8089)...
 start "log-service" cmd /k "mvnw.cmd spring-boot:run -pl log-service"
 
+echo Arrancando auth-service (Puerto 8090)...
+start "auth-service" cmd /k "mvnw.cmd spring-boot:run -pl auth-service"
+
 echo Todos los servicios han sido lanzados.

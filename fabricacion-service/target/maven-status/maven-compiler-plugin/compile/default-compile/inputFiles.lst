@@ -1,3 +1,7 @@
+C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\fabricacion-service\src\main\java\cl\apipedidos\config\FeignJwtInterceptor.java
+C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\fabricacion-service\src\main\java\cl\apipedidos\config\JwtAuthFilter.java
+C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\fabricacion-service\src\main\java\cl\apipedidos\config\JwtUtil.java
+C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\fabricacion-service\src\main\java\cl\apipedidos\config\SecurityConfig.java
 C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\fabricacion-service\src\main\java\cl\apipedidos\fabricacion\client\PedidoFeignClient.java
 C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\fabricacion-service\src\main\java\cl\apipedidos\fabricacion\client\PedidoServiceClient.java
 C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\fabricacion-service\src\main\java\cl\apipedidos\fabricacion\config\KafkaConfig.java

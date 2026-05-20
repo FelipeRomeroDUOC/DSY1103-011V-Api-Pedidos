@@ -8,7 +8,30 @@ echo Presiona cualquier tecla para comenzar a inyectar datos...
 pause >nul
 
 echo.
-echo [1/6] Creando Clientes (cliente-service :8082)...
+echo [1/7] Autenticacion (auth-service :8090)...
+echo       Los 4 usuarios base se cargan automaticamente con DataInitializer.
+echo       Obteniendo token JWT como admin...
+
+:: Login como admin para obtener token
+for /f "tokens=*" %%i in ('curl -s -X POST http://localhost:8090/api/auth/login -H "Content-Type: application/json" -d "{\"email\":\"admin@empresa.com\",\"password\":\"pass123\"}" 2^>nul') do set LOGIN_RESPONSE=%%i
+
+:: Extraer el token del JSON de respuesta usando PowerShell
+for /f "tokens=*" %%t in ('powershell -NoProfile -Command "try { ($env:LOGIN_RESPONSE | ConvertFrom-Json).data.token } catch { Write-Output 'ERROR' }"') do set AUTH_TOKEN=%%t
+
+if "%AUTH_TOKEN%"=="ERROR" (
+    echo       [WARN] No se pudo obtener token. auth-service puede no estar corriendo.
+    echo       Continuando sin autenticacion...
+) else (
+    echo       Token obtenido correctamente.
+
+    :: Crear un usuario adicional con token ADMIN
+    curl -s -X POST http://localhost:8090/api/auth/usuarios -H "Content-Type: application/json" -H "Authorization: Bearer %AUTH_TOKEN%" -d "{\"nombre\":\"Pedro Soto\",\"email\":\"pedro.soto@empresa.com\",\"password\":\"user123\",\"rol\":\"COMERCIAL\"}" >nul
+    echo       Usuario adicional creado: pedro.soto@empresa.com (COMERCIAL^)
+)
+echo OK.
+
+echo.
+echo [2/7] Creando Clientes (cliente-service :8082)...
 curl -s -X POST http://localhost:8082/api/clientes -H "Content-Type: application/json" -d "{\"nombreCl\":\"Tech Solutions S.A.\",\"rutCl\":76543210,\"divCl\":\"K\",\"emailCl\":\"contacto@techsolutions.cl\",\"telefonoCl\":\"+56912345678\",\"direccionCl\":\"Av. Apoquindo 4500\",\"comuna\":\"Las Condes\"}" >nul
 curl -s -X POST http://localhost:8082/api/clientes -H "Content-Type: application/json" -d "{\"nombreCl\":\"Juan Perez\",\"rutCl\":15123456,\"divCl\":\"7\",\"emailCl\":\"juan.perez@gmail.com\",\"telefonoCl\":\"+56987654321\",\"direccionCl\":\"Pasaje Los Pinos 123\",\"comuna\":\"Maipu\"}" >nul
 curl -s -X POST http://localhost:8082/api/clientes -H "Content-Type: application/json" -d "{\"nombreCl\":\"Muebles de Lujo SPA\",\"rutCl\":77111222,\"divCl\":\"3\",\"emailCl\":\"ventas@muebleslujo.cl\",\"telefonoCl\":\"+56999887766\",\"direccionCl\":\"Av. Providencia 1000\",\"comuna\":\"Providencia\"}" >nul

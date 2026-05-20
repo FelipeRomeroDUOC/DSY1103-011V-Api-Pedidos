@@ -1,4 +1,8 @@
 C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\pedido-service\src\main\java\cl\apipedidos\config\ApiExceptionHandler.java
+C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\pedido-service\src\main\java\cl\apipedidos\config\FeignJwtInterceptor.java
+C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\pedido-service\src\main\java\cl\apipedidos\config\JwtAuthFilter.java
+C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\pedido-service\src\main\java\cl\apipedidos\config\JwtUtil.java
+C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\pedido-service\src\main\java\cl\apipedidos\config\SecurityConfig.java
 C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\pedido-service\src\main\java\cl\apipedidos\http\client\feign\ClienteFeignAdapter.java
 C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\pedido-service\src\main\java\cl\apipedidos\http\client\feign\ClienteFeignClient.java
 C:\Users\felipe\Desktop\Proyecto FULLSTACK\Api_Pedidos\pedido-service\src\main\java\cl\apipedidos\http\client\feign\FeignClientConfig.java
