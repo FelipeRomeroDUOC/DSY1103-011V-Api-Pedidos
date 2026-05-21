@@ -9,3 +9,6 @@
 **/data/*.mv.db
 **/data/*.trace.db
 AGENTS.md
+
+# Ignore SPEC documentation files
+SPEC*.md
